@@ -4,7 +4,7 @@ title: Gatsby
 weight: 10
 ---
 
-<Alert severity="warning">This guide is out of date and may not be currently accurate. We are working to update it. Use at your own risk.</Alert>
+<Alert severity="info">This guide has been tested with Gatsby 5.</Alert>
 
 This guide will help you get started using Static CMS and Gatsby.
 
@@ -99,10 +99,21 @@ content/
         └── post-image.jpg
 ```
 
-Finally, add the plugin to your `gatsby-config.js`.
+Add the plugin to your `gatsby-config.js`.
 
 ```javascript
-plugins: [`gatsby-plugin-netlify-cms`];
+plugins: [`gatsby-plugin-static-cms`];
+```
+
+Finally, add the Netlify Identity widget to the `Head` component of your `index.js` page.
+
+```javascript
+export const Head = () => (
+  <>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    ...
+  </>
+)
 ```
 
 ### Push to GitHub
