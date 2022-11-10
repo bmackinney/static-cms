@@ -1,3 +1,5 @@
+import { ELEMENT_PARAGRAPH } from '@udecode/plate';
+
 import {
   ELEMENT_H1,
   ELEMENT_H2,
@@ -6,7 +8,6 @@ import {
   ELEMENT_H5,
   ELEMENT_H6,
 } from '../heading/constants';
-import { ELEMENT_PARAGRAPH } from '../paragraph/createParagraphPlugin';
 
 import type { MdPlatePlugin } from '../../plateTypes';
 

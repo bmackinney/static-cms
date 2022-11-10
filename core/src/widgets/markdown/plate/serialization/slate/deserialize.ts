@@ -130,7 +130,7 @@ export default function deserialize<T extends InputNodeTypes>(
           children: [{ text: node.value?.replace(/<br>/g, '') || '' }],
         } as ParagraphNode<T>;
       }
-      return { type: 'paragraph', children: [{ text: node.value || '' }] };
+      return { type: 'p', children: [{ text: node.value || '' }] };
 
     case 'emphasis':
       return {

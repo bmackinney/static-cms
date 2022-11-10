@@ -1,4 +1,4 @@
-import { ELEMENT_PARAGRAPH } from '../paragraph/createParagraphPlugin';
+import { ELEMENT_PARAGRAPH } from '@udecode/plate';
 
 import type { TrailingBlockPlugin } from '@udecode/plate';
 import type { MdPlatePlugin } from '../../plateTypes';

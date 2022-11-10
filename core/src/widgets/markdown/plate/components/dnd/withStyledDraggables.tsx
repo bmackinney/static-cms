@@ -1,4 +1,3 @@
-import React from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import Tippy from '@tippyjs/react';
 import {
@@ -6,12 +5,11 @@ import {
   ELEMENT_CODE_BLOCK,
   ELEMENT_IMAGE,
   ELEMENT_MEDIA_EMBED,
-  ELEMENT_OL,
-  ELEMENT_TABLE,
-  ELEMENT_TODO_LI,
+  ELEMENT_OL, ELEMENT_PARAGRAPH, ELEMENT_TABLE, ELEMENT_TODO_LI,
   ELEMENT_UL,
-  withDraggables,
+  withDraggables
 } from '@udecode/plate';
+import React from 'react';
 
 import {
   ELEMENT_H1,
@@ -19,12 +17,11 @@ import {
   ELEMENT_H3,
   ELEMENT_H4,
   ELEMENT_H5,
-  ELEMENT_H6,
+  ELEMENT_H6
 } from '../../plugins/heading/constants';
-import { ELEMENT_PARAGRAPH } from '../../plugins/paragraph/createParagraphPlugin';
 
-import type { createPlateUI } from '@udecode/plate';
 import type { TippyProps } from '@tippyjs/react';
+import type { createPlateUI } from '@udecode/plate';
 
 const styles = {
   grabber: { fontSize: 12 },

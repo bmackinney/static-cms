@@ -33,7 +33,7 @@ const VOID_ELEMENTS: Array<keyof NodeTypes> = ['thematic_break', 'image'];
 const BREAK_TAG = '<br>';
 
 const nodeTypes: NodeTypes = {
-  paragraph: 'paragraph',
+  paragraph: 'p',
   block_quote: 'block_quote',
   code_block: 'code_block',
   link: 'link',
@@ -70,16 +70,9 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
     children = chunk.children
       .map((c: MdBlockType | MdLeafType) => {
         const isList = !isLeafNode(c) ? (LIST_TYPES as string[]).includes(c.type || '') : false;
-        console.log(
-          'is list?',
-          chunk,
-          isList,
-          isLeafNode(c),
-          LIST_TYPES,
-          !isLeafNode(c) && (LIST_TYPES as string[]).includes(c.type || ''),
-        );
-
         const selfIsList = (LIST_TYPES as string[]).includes(chunk.type || '');
+
+        console.log('child is list?', isList, c, 'self is list?', selfIsList, chunk);
 
         // Links can have the following shape
         // In which case we don't want to surround
@@ -232,15 +225,16 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
 
     case nodeTypes.ul_list:
     case nodeTypes.ol_list:
-      console.log('its a list!', chunk);
+      console.log('its a list!', chunk, children);
       return `\n${children}\n`;
 
     case nodeTypes.listItem:
-      console.log('its a list item!', chunk);
+      console.log('its a list item!', chunk, children);
       const isOL = chunk && chunk.parentType === nodeTypes.ol_list;
       const treatAsLeaf =
         (chunk as MdBlockType).children.length === 1 &&
-        isLeafNode((chunk as MdBlockType).children[0]);
+        (isLeafNode((chunk as MdBlockType).children[0]) ||
+          (listDepth === 0 && ((chunk as MdBlockType).children[0] as BlockType).type === 'lic'));
 
       let spacer = '';
       for (let k = 0; listDepth > k; k++) {
@@ -258,6 +252,9 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
 
     case nodeTypes.thematic_break:
       return `---\n`;
+
+    case 'lic':
+      return children;
 
     default:
       console.warn('Unrecognized slate node, proceeding as text', `"${type}"`, chunk);

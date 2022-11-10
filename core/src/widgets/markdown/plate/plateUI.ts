@@ -2,11 +2,10 @@ import {
   CodeBlockElement,
   createPlateUI,
   ELEMENT_CODE_BLOCK,
+  ELEMENT_PARAGRAPH,
   StyledElement,
   withProps,
 } from '@udecode/plate';
-
-import { ELEMENT_PARAGRAPH } from './plugins/paragraph/createParagraphPlugin';
 
 export const plateUI = createPlateUI({
   [ELEMENT_CODE_BLOCK]: CodeBlockElement,

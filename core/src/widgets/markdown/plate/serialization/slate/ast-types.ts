@@ -50,7 +50,7 @@ export const markNodeTypes = {
 };
 
 export const defaultNodeTypes: NodeTypes = {
-  paragraph: 'paragraph',
+  paragraph: 'p',
   block_quote: 'block_quote',
   code_block: 'code_block',
   link: 'link',

@@ -1,69 +1,45 @@
 import { styled } from '@mui/material/styles';
 import {
-  createAlignPlugin,
   createAutoformatPlugin,
-  createBlockquotePlugin,
   createBoldPlugin,
-  createCodeBlockPlugin,
   createCodePlugin,
-  createComboboxPlugin,
-  createDeserializeCsvPlugin,
-  createDeserializeDocxPlugin,
-  createDeserializeMdPlugin,
-  createDndPlugin,
   createExitBreakPlugin,
   createFontBackgroundColorPlugin,
   createFontColorPlugin,
-  createFontSizePlugin,
-  createHighlightPlugin,
-  createHorizontalRulePlugin,
-  createImagePlugin,
-  createIndentPlugin,
   createItalicPlugin,
-  createKbdPlugin,
-  createLinkPlugin,
   createListPlugin,
-  createMediaEmbedPlugin,
-  createMentionPlugin,
-  createNodeIdPlugin,
-  createNormalizeTypesPlugin,
+  createParagraphPlugin,
   createPlateUI,
   createResetNodePlugin,
-  createSelectOnBackspacePlugin,
   createSoftBreakPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
-  createTablePlugin,
-  createTodoListPlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
+  ELEMENT_PARAGRAPH,
   Plate,
   PlateProvider,
   StyledLeaf,
   withProps,
 } from '@udecode/plate';
-import { createJuicePlugin } from '@udecode/plate-juice';
 import React, { useMemo, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import MarkBalloonToolbar from './components/balloon-toolbar/MarkBalloonToolbar';
-import { withStyledDraggables } from './components/dnd/withStyledDraggables';
 import { Toolbar } from './components/toolbar/Toolbar';
 import { ToolbarButtons } from './components/ToolbarButtons';
 import { editableProps } from './editableProps';
 import { createMdPlugins } from './plateTypes';
-import { alignPlugin } from './plugins/align/alignPlugin';
 import { autoformatPlugin } from './plugins/autoformat/autoformatPlugin';
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
-import { dragOverCursorPlugin } from './plugins/cursor-overlay/dragOverCursorPlugin';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
-import { indentPlugin } from './plugins/indent/indentPlugin';
-import { linkPlugin } from './plugins/link/linkPlugin';
-import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
-import { selectOnBackspacePlugin } from './plugins/select-on-backspace/selectOnBackspacePlugin';
-import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
-import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
+import Heading1 from './plugins/heading/components/Heading1';
+import Heading2 from './plugins/heading/components/Heading2';
+import Heading3 from './plugins/heading/components/Heading3';
+import Heading4 from './plugins/heading/components/Heading4';
+import Heading5 from './plugins/heading/components/Heading5';
+import Heading6 from './plugins/heading/components/Heading6';
 import {
   ELEMENT_H1,
   ELEMENT_H2,
@@ -72,25 +48,18 @@ import {
   ELEMENT_H5,
   ELEMENT_H6,
 } from './plugins/heading/constants';
-import Heading1 from './plugins/heading/components/Heading1';
-import Heading2 from './plugins/heading/components/Heading2';
-import Heading3 from './plugins/heading/components/Heading3';
-import Heading4 from './plugins/heading/components/Heading4';
-import Heading5 from './plugins/heading/components/Heading5';
-import Heading6 from './plugins/heading/components/Heading6';
 import { createHeadingPlugin } from './plugins/heading/createHeadingPlugin';
-import {
-  createParagraphPlugin,
-  ELEMENT_PARAGRAPH,
-} from './plugins/paragraph/createParagraphPlugin';
 import Paragraph from './plugins/paragraph/Paragraph';
+import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
+import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
 import createStrikethroughPlugin, {
   MARK_STRIKETHROUGH,
 } from './plugins/strikethrough/createStrikethroughPlugin';
+import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
 
 import type { AutoformatPlugin } from '@udecode/plate';
 import type { CSSProperties } from 'react';
-import type { MdEditor, MdPlatePlugin, MdValue } from './plateTypes';
+import type { MdEditor, MdValue } from './plateTypes';
 
 const StyledPlateEditor = styled('div')`
   position: relative;

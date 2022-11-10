@@ -34,6 +34,7 @@ import type {
   ELEMENT_MENTION,
   ELEMENT_MENTION_INPUT,
   ELEMENT_OL,
+  ELEMENT_PARAGRAPH,
   ELEMENT_TABLE,
   ELEMENT_TD,
   ELEMENT_TODO_LI,
@@ -81,7 +82,6 @@ import type {
   ELEMENT_H5,
   ELEMENT_H6,
 } from './plugins/heading/constants';
-import type { ELEMENT_PARAGRAPH } from './plugins/paragraph/createParagraphPlugin';
 
 /**
  * Text

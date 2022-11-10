@@ -1,4 +1,4 @@
-import { ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK } from '@udecode/plate';
+import { ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH } from '@udecode/plate';
 
 import {
   ELEMENT_H1,
@@ -6,9 +6,8 @@ import {
   ELEMENT_H3,
   ELEMENT_H4,
   ELEMENT_H5,
-  ELEMENT_H6,
+  ELEMENT_H6
 } from '../heading/constants';
-import { ELEMENT_PARAGRAPH } from '../paragraph/createParagraphPlugin';
 
 import type { IndentPlugin } from '@udecode/plate';
 import type { MdPlatePlugin } from '../../plateTypes';
