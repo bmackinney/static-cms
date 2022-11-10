@@ -1,5 +1,3 @@
-import { ELEMENT_PARAGRAPH } from '@udecode/plate';
-
 import {
   ELEMENT_H1,
   ELEMENT_H2,
@@ -7,7 +5,8 @@ import {
   ELEMENT_H4,
   ELEMENT_H5,
   ELEMENT_H6,
-} from '../heading/constants';
+  ELEMENT_PARAGRAPH,
+} from '@udecode/plate';
 
 import type { MdPlatePlugin } from '../../plateTypes';
 

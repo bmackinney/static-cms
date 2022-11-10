@@ -6,12 +6,14 @@ import {
   createExitBreakPlugin,
   createFontBackgroundColorPlugin,
   createFontColorPlugin,
+  createHeadingPlugin,
   createItalicPlugin,
   createListPlugin,
   createParagraphPlugin,
   createPlateUI,
   createResetNodePlugin,
   createSoftBreakPlugin,
+  createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
   createTrailingBlockPlugin,
@@ -19,8 +21,6 @@ import {
   ELEMENT_PARAGRAPH,
   Plate,
   PlateProvider,
-  StyledLeaf,
-  withProps,
 } from '@udecode/plate';
 import React, { useMemo, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -34,27 +34,9 @@ import { createMdPlugins } from './plateTypes';
 import { autoformatPlugin } from './plugins/autoformat/autoformatPlugin';
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
-import Heading1 from './plugins/heading/components/Heading1';
-import Heading2 from './plugins/heading/components/Heading2';
-import Heading3 from './plugins/heading/components/Heading3';
-import Heading4 from './plugins/heading/components/Heading4';
-import Heading5 from './plugins/heading/components/Heading5';
-import Heading6 from './plugins/heading/components/Heading6';
-import {
-  ELEMENT_H1,
-  ELEMENT_H2,
-  ELEMENT_H3,
-  ELEMENT_H4,
-  ELEMENT_H5,
-  ELEMENT_H6,
-} from './plugins/heading/constants';
-import { createHeadingPlugin } from './plugins/heading/createHeadingPlugin';
 import Paragraph from './plugins/paragraph/Paragraph';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
-import createStrikethroughPlugin, {
-  MARK_STRIKETHROUGH,
-} from './plugins/strikethrough/createStrikethroughPlugin';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
 
 import type { AutoformatPlugin } from '@udecode/plate';
@@ -67,14 +49,7 @@ const StyledPlateEditor = styled('div')`
 `;
 
 const components = createPlateUI({
-  [ELEMENT_H1]: Heading1,
-  [ELEMENT_H2]: Heading2,
-  [ELEMENT_H3]: Heading3,
-  [ELEMENT_H4]: Heading4,
-  [ELEMENT_H5]: Heading5,
-  [ELEMENT_H6]: Heading6,
   [ELEMENT_PARAGRAPH]: Paragraph,
-  [MARK_STRIKETHROUGH]: withProps(StyledLeaf, { as: 's' }),
 });
 
 const styles: Record<string, CSSProperties> = {

@@ -11,6 +11,7 @@ import {
   MARK_BOLD,
   MARK_CODE,
   MARK_ITALIC,
+  MARK_STRIKETHROUGH,
   MARK_SUBSCRIPT,
   MARK_SUPERSCRIPT,
   MARK_UNDERLINE,
@@ -18,7 +19,6 @@ import {
 import React from 'react';
 
 import { useMdPlateEditorRef } from '../plateTypes';
-import { MARK_STRIKETHROUGH } from '../plugins/strikethrough/createStrikethroughPlugin';
 
 export const BasicMarkToolbarButtons = () => {
   const editor = useMdPlateEditorRef();

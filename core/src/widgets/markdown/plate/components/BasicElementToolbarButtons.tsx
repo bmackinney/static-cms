@@ -11,19 +11,17 @@ import {
   CodeBlockToolbarButton,
   ELEMENT_BLOCKQUOTE,
   ELEMENT_CODE_BLOCK,
-  getPluginType,
-  useEventPlateId,
-} from '@udecode/plate';
-import React from 'react';
-
-import {
   ELEMENT_H1,
   ELEMENT_H2,
   ELEMENT_H3,
   ELEMENT_H4,
   ELEMENT_H5,
   ELEMENT_H6,
-} from '../plugins/heading/constants';
+  getPluginType,
+  useEventPlateId,
+} from '@udecode/plate';
+import React from 'react';
+
 import { useMdPlateEditorRef } from '../plateTypes';
 
 export const BasicElementToolbarButtons = () => {
