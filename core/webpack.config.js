@@ -18,7 +18,10 @@ module.exports = {
         test: /\.m?js$/,
         enforce: 'pre',
         use: ['source-map-loader'],
-        exclude: /(node_modules[\\/]@toast-ui[\\/]editor[\\/]dist)/,
+        exclude: [
+          /(node_modules[\\/]@toast-ui[\\/]editor[\\/]dist)/,
+          /(node_modules[\\/]nth-check[\\/]lib)/,
+        ],
       },
       {
         test: /\.m?js$/,

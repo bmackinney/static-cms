@@ -1,5 +1,5 @@
-import { TEditableProps } from '@udecode/plate';
-import { MdValue } from '../typescript/plateTypes';
+import type { TEditableProps } from '@udecode/plate';
+import type { MdValue } from './plateTypes';
 
 export const editableProps: TEditableProps<MdValue> = {
   spellCheck: false,

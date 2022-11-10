@@ -1,6 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { styled } from '@mui/material/styles';
 import {
   createAlignPlugin,
   createAutoformatPlugin,
@@ -42,21 +40,24 @@ import {
   createTodoListPlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
-  MentionCombobox,
   Plate,
   PlateProvider,
 } from '@udecode/plate';
 import { createJuicePlugin } from '@udecode/plate-juice';
-import { createBlockSelectionPlugin } from '@udecode/plate-selection';
+import React, { useMemo, useRef } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import MarkBalloonToolbar from './components/balloon-toolbar/MarkBalloonToolbar';
+import { withStyledDraggables } from './components/dnd/withStyledDraggables';
+import { Toolbar } from './components/toolbar/Toolbar';
+import { ToolbarButtons } from './components/ToolbarButtons';
+import { editableProps } from './editableProps';
 import { createMdPlugins } from './plateTypes';
 import { alignPlugin } from './plugins/align/alignPlugin';
 import { autoformatPlugin } from './plugins/autoformat/autoformatPlugin';
-// import { MarkBalloonToolbar } from './balloon-toolbar/MarkBalloonToolbar';
-import { editableProps } from './editableProps';
-// import { CursorOverlayContainer } from './cursor-overlay/CursorOverlayContainer';
+import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { dragOverCursorPlugin } from './plugins/cursor-overlay/dragOverCursorPlugin';
-import { withStyledDraggables } from './components/dnd/withStyledDraggables';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
 import { forcedLayoutPlugin } from './plugins/forced-layout/forcedLayoutPlugin';
 import { indentPlugin } from './plugins/indent/indentPlugin';
@@ -64,14 +65,16 @@ import { linkPlugin } from './plugins/link/linkPlugin';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { selectOnBackspacePlugin } from './plugins/select-on-backspace/selectOnBackspacePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
-// import { Toolbar } from './toolbar/Toolbar';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
-// import { playgroundValue } from './playgroundValue';
-import { ToolbarButtons } from './ToolbarButtons';
 
-import type { CSSProperties } from 'react';
 import type { AutoformatPlugin } from '@udecode/plate';
+import type { CSSProperties } from 'react';
 import type { MdEditor, MdPlatePlugin, MdValue } from './plateTypes';
+
+const StyledPlateEditor = styled('div')`
+  position: relative;
+  padding: 1.25rem;
+`;
 
 const components = createPlateUI({
   // customize your components by plugin key
@@ -82,20 +85,12 @@ const styles: Record<string, CSSProperties> = {
 };
 
 interface PlateEditorProps {
-  value: string;
+  initialValue: MdValue;
+  onChange: (value: MdValue) => void;
 }
 
-const PlateEditor = ({ initialValue }: PlateEditorProps) => {
+const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
   const containerRef = useRef(null);
-  const [internalValue, setInternalValue] = useState<MdValue>([]);
-
-  unified()
-  .use(markdown)
-  .use(slate)
-  .process(fs.readFileSync('example.md'), (err, file) => {
-    if (err) throw err;
-    console.log({ file });
-  });
 
   const plugins = useMemo(
     () =>
@@ -126,7 +121,6 @@ const PlateEditor = ({ initialValue }: PlateEditorProps) => {
           createFontSizePlugin(),
           createKbdPlugin(),
           createNodeIdPlugin(),
-          createBlockSelectionPlugin(),
           createDndPlugin({ options: { enableScroller: true } }),
           dragOverCursorPlugin,
           createIndentPlugin(indentPlugin),
@@ -153,24 +147,24 @@ const PlateEditor = ({ initialValue }: PlateEditorProps) => {
     [],
   );
 
+  console.log('plate editor rendering!');
   return (
-    <DndProvider backend={HTML5Backend}>
-      <PlateProvider<MdValue> initialValue={initialValue} plugins={plugins}>
-        <Toolbar>
-          <ToolbarButtons />
-        </Toolbar>
+    <StyledPlateEditor>
+      <DndProvider backend={HTML5Backend}>
+        <PlateProvider<MdValue> initialValue={initialValue} plugins={plugins}>
+          <Toolbar>
+            <ToolbarButtons />
+          </Toolbar>
 
-        <div ref={containerRef} style={styles.container}>
-          <Plate editableProps={editableProps}>
-            <MarkBalloonToolbar />
-
-            <MentionCombobox items={MENTIONABLES} />
-
-            <CursorOverlayContainer containerRef={containerRef} />
-          </Plate>
-        </div>
-      </PlateProvider>
-    </DndProvider>
+          <div ref={containerRef} style={styles.container}>
+            <Plate editableProps={editableProps} onChange={onChange}>
+              <MarkBalloonToolbar />
+              <CursorOverlayContainer containerRef={containerRef} />
+            </Plate>
+          </div>
+        </PlateProvider>
+      </DndProvider>
+    </StyledPlateEditor>
   );
 };
 

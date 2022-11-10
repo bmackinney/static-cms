@@ -1,4 +1,6 @@
+import { HeadingToolbar } from '@udecode/plate';
 import React from 'react';
-import { HeadingToolbar, ToolbarProps } from '@udecode/plate';
+
+import type { ToolbarProps } from '@udecode/plate';
 
 export const Toolbar = (props: ToolbarProps) => <HeadingToolbar {...props} />;

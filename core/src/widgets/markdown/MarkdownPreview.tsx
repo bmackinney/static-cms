@@ -1,4 +1,3 @@
-import { Viewer } from '@toast-ui/react-editor';
 import React, { useEffect, useMemo, useRef } from 'react';
 
 import WidgetPreviewContainer from '../../components/UI/WidgetPreviewContainer';
@@ -19,16 +18,14 @@ const MarkdownPreview = ({
   const mediaHolder = useMemo(() => new MediaHolder(), []);
   const media = useMedia({ value, getAsset, field });
 
-  const viewer = useRef<Viewer | null>(null);
-
   useEffect(() => {
-    viewer.current?.getInstance().setMarkdown(value ?? '');
+    // viewer.current?.getInstance().setMarkdown(value ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   useEffect(() => {
     mediaHolder.setBulkMedia(media);
-    viewer.current?.getInstance().setMarkdown(value ?? '');
+    // viewer.current?.getInstance().setMarkdown(value ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [media]);
 
@@ -44,16 +41,7 @@ const MarkdownPreview = ({
       return null;
     }
 
-    return (
-      <WidgetPreviewContainer>
-        <Viewer
-          ref={viewer}
-          initialValue={value}
-          customHTMLSanitizer={(content: string) => content}
-          plugins={plugins}
-        />
-      </WidgetPreviewContainer>
-    );
+    return <WidgetPreviewContainer>{value}</WidgetPreviewContainer>;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plugins]);
 };

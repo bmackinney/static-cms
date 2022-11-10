@@ -1,8 +1,9 @@
-import React from 'react';
-import { FormatIndentDecrease } from '@styled-icons/material/FormatIndentDecrease';
-import { FormatIndentIncrease } from '@styled-icons/material/FormatIndentIncrease';
+import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
+import FormatIndentIncreaseIcon from '@mui/icons-material/FormatIndentIncrease';
 import { indent, outdent, ToolbarButton } from '@udecode/plate';
-import { useMdPlateEditorRef } from '../typescript/plateTypes';
+import React from 'react';
+
+import { useMdPlateEditorRef } from '../../plateTypes';
 
 export const IndentToolbarButtons = () => {
   const editor = useMdPlateEditorRef();
@@ -10,22 +11,22 @@ export const IndentToolbarButtons = () => {
   return (
     <>
       <ToolbarButton
-        onMouseDown={(e) => {
+        onMouseDown={e => {
           if (!editor) return;
 
           outdent(editor);
           e.preventDefault();
         }}
-        icon={<FormatIndentDecrease />}
+        icon={<FormatIndentDecreaseIcon />}
       />
       <ToolbarButton
-        onMouseDown={(e) => {
+        onMouseDown={e => {
           if (!editor) return;
 
           indent(editor);
           e.preventDefault();
         }}
-        icon={<FormatIndentIncrease />}
+        icon={<FormatIndentIncreaseIcon />}
       />
     </>
   );

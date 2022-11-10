@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormatBold } from '@styled-icons/material/FormatBold';
-import { FormatItalic } from '@styled-icons/material/FormatItalic';
-import { FormatUnderlined } from '@styled-icons/material/FormatUnderlined';
-import { TippyProps } from '@tippyjs/react';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import {
   BalloonToolbar,
   getPluginType,
@@ -11,9 +10,12 @@ import {
   MARK_UNDERLINE,
   MarkToolbarButton,
 } from '@udecode/plate';
-import { useMdPlateEditorRef } from '../typescript/plateTypes';
 
-export const MarkBalloonToolbar = () => {
+import { useMdPlateEditorRef } from '../../plateTypes';
+
+import type { TippyProps } from '@tippyjs/react';
+
+const MarkBalloonToolbar = () => {
   const editor = useMdPlateEditorRef();
 
   const arrow = false;
@@ -38,19 +40,21 @@ export const MarkBalloonToolbar = () => {
     <BalloonToolbar theme={theme} arrow={arrow}>
       <MarkToolbarButton
         type={getPluginType(editor, MARK_BOLD)}
-        icon={<FormatBold />}
+        icon={<FormatBoldIcon />}
         tooltip={boldTooltip}
       />
       <MarkToolbarButton
         type={getPluginType(editor, MARK_ITALIC)}
-        icon={<FormatItalic />}
+        icon={<FormatItalicIcon />}
         tooltip={italicTooltip}
       />
       <MarkToolbarButton
         type={getPluginType(editor, MARK_UNDERLINE)}
-        icon={<FormatUnderlined />}
+        icon={<FormatUnderlinedIcon />}
         tooltip={underlineTooltip}
       />
     </BalloonToolbar>
   );
 };
+
+export default MarkBalloonToolbar;

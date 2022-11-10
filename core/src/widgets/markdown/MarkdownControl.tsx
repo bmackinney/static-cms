@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { Editor } from '@toast-ui/react-editor';
 import isEmpty from 'lodash/isEmpty';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import uuid from 'uuid';
+import { serialize } from 'remark-slate';
 
 import FieldLabel from '../../components/UI/FieldLabel';
 import Outline from '../../components/UI/Outline';
@@ -14,11 +14,12 @@ import useEditorOptions from './hooks/useEditorOptions';
 import useMedia, { MediaHolder } from './hooks/useMedia';
 import usePlugins from './hooks/usePlugins';
 import useToolbarItems from './hooks/useToolbarItems';
+import useMarkdownToSlate from './plate/hooks/useMarkdownToSlate';
+import PlateEditor from './plate/PlateEditor';
 
-import type { RefObject } from 'react';
 import type { MarkdownField, MediaLibrary, WidgetControlProps } from '../../interface';
-
-import '@toast-ui/editor/dist/toastui-editor.css';
+import type { MdValue } from './plate/plateTypes';
+import type { BlockType, LeafType } from 'remark-slate';
 
 const StyledEditorWrapper = styled('div')`
   position: relative;
@@ -53,7 +54,6 @@ const MarkdownControl = ({
   config,
 }: WidgetControlProps<string, MarkdownField>) => {
   const [internalValue, setInternalValue] = useState(value ?? '');
-  const editorRef = useMemo(() => React.createRef(), []) as RefObject<Editor>;
   const [hasFocus, setHasFocus] = useState(false);
 
   const handleOnFocus = useCallback(() => {
@@ -64,17 +64,22 @@ const MarkdownControl = ({
     setHasFocus(false);
   }, []);
 
-  const handleOnChange = useCallback(() => {
-    const newValue = editorRef.current?.getInstance().getMarkdown() ?? '';
-    if (newValue !== internalValue) {
-      setInternalValue(newValue);
-      onChange(newValue);
-    }
-  }, [editorRef, internalValue, onChange]);
+  const handleOnChange = useCallback(
+    (slateValue: MdValue) => {
+      const newMarkdownValue = slateValue.map(v => serialize(v as BlockType | LeafType)).join('');
+      console.log('newMarkdownValue', newMarkdownValue);
+      // const newValue = editorRef.current?.getInstance().getMarkdown() ?? '';
+      // if (newValue !== internalValue) {
+      //   setInternalValue(newValue);
+      //   onChange(newValue);
+      // }
+    },
+    [internalValue, onChange],
+  );
 
   const handleLabelClick = useCallback(() => {
-    editorRef.current?.getInstance().focus();
-  }, [editorRef]);
+    // editorRef.current?.getInstance().focus();
+  }, []);
 
   const controlID: string = useMemo(() => uuid(), []);
   const mediaLibraryFieldOptions: MediaLibrary = useMemo(
@@ -130,23 +135,22 @@ const MarkdownControl = ({
       }
 
       if (isNotEmpty(content)) {
-        const editorInstance = editorRef.current?.getInstance();
-        if (!editorInstance) {
-          return;
-        }
-
-        editorInstance.focus();
-        const isOnMarkdown = editorInstance.isMarkdownMode();
-        if (!isOnMarkdown) {
-          editorInstance.changeMode('markdown');
-        }
-        editorInstance.insertText(content);
-        if (!isOnMarkdown) {
-          editorInstance.changeMode('wysiwyg');
-        }
-        setTimeout(() => {
-          handleOnChange();
-        });
+        // const editorInstance = editorRef.current?.getInstance();
+        // if (!editorInstance) {
+        //   return;
+        // }
+        // editorInstance.focus();
+        // const isOnMarkdown = editorInstance.isMarkdownMode();
+        // if (!isOnMarkdown) {
+        //   editorInstance.changeMode('markdown');
+        // }
+        // editorInstance.insertText(content);
+        // if (!isOnMarkdown) {
+        //   editorInstance.changeMode('wysiwyg');
+        // }
+        // setTimeout(() => {
+        //   handleOnChange();
+        // });
       }
     };
 
@@ -161,7 +165,7 @@ const MarkdownControl = ({
 
   useEffect(() => {
     mediaHolder.setBulkMedia(media);
-    editorRef.current?.getInstance().setMarkdown(internalValue);
+    // editorRef.current?.getInstance().setMarkdown(internalValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [media]);
 
@@ -172,6 +176,8 @@ const MarkdownControl = ({
     mode: 'editor',
   });
   const toolbarItems = useToolbarItems(markdownEditorOptions.toolbarItems, handleOpenMedialLibrary);
+
+  const [slateValue, loaded] = useMarkdownToSlate(internalValue);
 
   return useMemo(
     () => (
@@ -184,39 +190,11 @@ const MarkdownControl = ({
         >
           {label}
         </FieldLabel>
-        <Editor
-          key="markdown-control-editor"
-          initialValue={internalValue}
-          previewStyle="vertical"
-          height={height}
-          initialEditType={initialEditType}
-          useCommandShortcut={true}
-          onChange={handleOnChange}
-          toolbarItems={toolbarItems}
-          ref={editorRef}
-          onFocus={handleOnFocus}
-          onBlur={handleOnBlur}
-          autofocus={false}
-          plugins={plugins}
-        />
+        {loaded ? <PlateEditor initialValue={slateValue} onChange={handleOnChange} /> : null}
         <Outline key="markdown-control-outline" hasLabel hasError={hasErrors} />
       </StyledEditorWrapper>
     ),
-    [
-      editorRef,
-      handleLabelClick,
-      handleOnBlur,
-      handleOnChange,
-      handleOnFocus,
-      hasErrors,
-      hasFocus,
-      height,
-      initialEditType,
-      internalValue,
-      label,
-      plugins,
-      toolbarItems,
-    ],
+    [handleLabelClick, hasErrors, hasFocus, label, loaded, slateValue],
   );
 };
 
