@@ -15,7 +15,6 @@ import {
   createFontBackgroundColorPlugin,
   createFontColorPlugin,
   createFontSizePlugin,
-  createHeadingPlugin,
   createHighlightPlugin,
   createHorizontalRulePlugin,
   createImagePlugin,
@@ -28,7 +27,6 @@ import {
   createMentionPlugin,
   createNodeIdPlugin,
   createNormalizeTypesPlugin,
-  createParagraphPlugin,
   createPlateUI,
   createResetNodePlugin,
   createSelectOnBackspacePlugin,
@@ -59,13 +57,32 @@ import { autoformatPlugin } from './plugins/autoformat/autoformatPlugin';
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { dragOverCursorPlugin } from './plugins/cursor-overlay/dragOverCursorPlugin';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
-import { forcedLayoutPlugin } from './plugins/forced-layout/forcedLayoutPlugin';
 import { indentPlugin } from './plugins/indent/indentPlugin';
 import { linkPlugin } from './plugins/link/linkPlugin';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { selectOnBackspacePlugin } from './plugins/select-on-backspace/selectOnBackspacePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
+import {
+  ELEMENT_H1,
+  ELEMENT_H2,
+  ELEMENT_H3,
+  ELEMENT_H4,
+  ELEMENT_H5,
+  ELEMENT_H6,
+} from './plugins/heading/constants';
+import Heading1 from './plugins/heading/components/Heading1';
+import Heading2 from './plugins/heading/components/Heading2';
+import Heading3 from './plugins/heading/components/Heading3';
+import Heading4 from './plugins/heading/components/Heading4';
+import Heading5 from './plugins/heading/components/Heading5';
+import Heading6 from './plugins/heading/components/Heading6';
+import { createHeadingPlugin } from './plugins/heading/createHeadingPlugin';
+import {
+  createParagraphPlugin,
+  ELEMENT_PARAGRAPH,
+} from './plugins/paragraph/createParagraphPlugin';
+import Paragraph from './plugins/paragraph/Paragraph';
 
 import type { AutoformatPlugin } from '@udecode/plate';
 import type { CSSProperties } from 'react';
@@ -77,7 +94,13 @@ const StyledPlateEditor = styled('div')`
 `;
 
 const components = createPlateUI({
-  // customize your components by plugin key
+  [ELEMENT_H1]: Heading1,
+  [ELEMENT_H2]: Heading2,
+  [ELEMENT_H3]: Heading3,
+  [ELEMENT_H4]: Heading4,
+  [ELEMENT_H5]: Heading5,
+  [ELEMENT_H6]: Heading6,
+  [ELEMENT_PARAGRAPH]: Paragraph,
 });
 
 const styles: Record<string, CSSProperties> = {
@@ -108,7 +131,7 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
           // createMediaEmbedPlugin(),
           // createCodeBlockPlugin(),
           // createAlignPlugin(alignPlugin),
-          // createBoldPlugin(),
+          createBoldPlugin(),
           // createCodePlugin(),
           // createItalicPlugin(),
           // createHighlightPlugin(),
@@ -130,7 +153,7 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
           createResetNodePlugin(resetBlockTypePlugin),
           createSoftBreakPlugin(softBreakPlugin),
           createExitBreakPlugin(exitBreakPlugin),
-          createNormalizeTypesPlugin(forcedLayoutPlugin),
+          // createNormalizeTypesPlugin(forcedLayoutPlugin),
           // createTrailingBlockPlugin(trailingBlockPlugin),
           // createSelectOnBackspacePlugin(selectOnBackspacePlugin),
           // createComboboxPlugin(),
@@ -141,7 +164,7 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
           // createJuicePlugin() as MdPlatePlugin,
         ],
         {
-          components: withStyledDraggables(components),
+          components,
         },
       ),
     [],

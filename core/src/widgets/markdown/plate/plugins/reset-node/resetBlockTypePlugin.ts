@@ -1,10 +1,11 @@
 import {
   ELEMENT_BLOCKQUOTE,
-  ELEMENT_PARAGRAPH,
   ELEMENT_TODO_LI,
   isBlockAboveEmpty,
   isSelectionAtBlockStart,
 } from '@udecode/plate';
+
+import { ELEMENT_PARAGRAPH } from '../paragraph/createParagraphPlugin';
 
 import type { ResetNodePlugin } from '@udecode/plate';
 import type { MdPlatePlugin } from '../../plateTypes';

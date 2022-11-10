@@ -1,4 +1,3 @@
-import React from 'react';
 import CodeIcon from '@mui/icons-material/Code';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import Looks3Icon from '@mui/icons-material/Looks3';
@@ -12,16 +11,19 @@ import {
   CodeBlockToolbarButton,
   ELEMENT_BLOCKQUOTE,
   ELEMENT_CODE_BLOCK,
+  getPluginType,
+  useEventPlateId,
+} from '@udecode/plate';
+import React from 'react';
+
+import {
   ELEMENT_H1,
   ELEMENT_H2,
   ELEMENT_H3,
   ELEMENT_H4,
   ELEMENT_H5,
   ELEMENT_H6,
-  getPluginType,
-  useEventPlateId,
-} from '@udecode/plate';
-
+} from '../plugins/heading/constants';
 import { useMdPlateEditorRef } from '../plateTypes';
 
 export const BasicElementToolbarButtons = () => {

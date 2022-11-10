@@ -26,9 +26,6 @@ import type {
   ELEMENT_BLOCKQUOTE,
   ELEMENT_CODE_BLOCK,
   ELEMENT_CODE_LINE,
-  ELEMENT_H1,
-  ELEMENT_H2,
-  ELEMENT_H3,
   ELEMENT_HR,
   ELEMENT_IMAGE,
   ELEMENT_LI,
@@ -37,7 +34,6 @@ import type {
   ELEMENT_MENTION,
   ELEMENT_MENTION_INPUT,
   ELEMENT_OL,
-  ELEMENT_PARAGRAPH,
   ELEMENT_TABLE,
   ELEMENT_TD,
   ELEMENT_TODO_LI,
@@ -77,6 +73,15 @@ import type {
   WithOverride,
 } from '@udecode/plate';
 import type { CSSProperties } from 'styled-components';
+import type {
+  ELEMENT_H1,
+  ELEMENT_H2,
+  ELEMENT_H3,
+  ELEMENT_H4,
+  ELEMENT_H5,
+  ELEMENT_H6,
+} from './plugins/heading/constants';
+import type { ELEMENT_PARAGRAPH } from './plugins/paragraph/createParagraphPlugin';
 
 /**
  * Text
@@ -178,6 +183,21 @@ export interface MdH3Element extends MdBlockElement {
   children: MdInlineChildren;
 }
 
+export interface MdH4Element extends MdBlockElement {
+  type: typeof ELEMENT_H4;
+  children: MdInlineChildren;
+}
+
+export interface MdH5Element extends MdBlockElement {
+  type: typeof ELEMENT_H5;
+  children: MdInlineChildren;
+}
+
+export interface MdH6Element extends MdBlockElement {
+  type: typeof ELEMENT_H6;
+  children: MdInlineChildren;
+}
+
 export interface MdBlockquoteElement extends MdBlockElement {
   type: typeof ELEMENT_BLOCKQUOTE;
   children: MdInlineChildren;
@@ -243,13 +263,6 @@ export interface MdHrElement extends MdBlockElement {
   children: [EmptyText];
 }
 
-// export interface MdExcalidrawElement
-//   extends TExcalidrawElement,
-//     MdBlockElement {
-//   type: typeof ELEMENT_EXCALIDRAW;
-//   children: [EmptyText];
-// }
-
 export type MdNestableBlock = MdParagraphElement;
 
 export type MdBlock = Exclude<MdElement, MdInlineElement>;
@@ -260,6 +273,9 @@ export type MdRootBlock =
   | MdH1Element
   | MdH2Element
   | MdH3Element
+  | MdH4Element
+  | MdH5Element
+  | MdH6Element
   | MdBlockquoteElement
   | MdCodeBlockElement
   | MdTableElement

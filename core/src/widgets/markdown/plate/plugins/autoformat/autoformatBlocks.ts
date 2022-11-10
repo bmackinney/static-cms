@@ -2,12 +2,6 @@ import {
   ELEMENT_BLOCKQUOTE,
   ELEMENT_CODE_BLOCK,
   ELEMENT_DEFAULT,
-  ELEMENT_H1,
-  ELEMENT_H2,
-  ELEMENT_H3,
-  ELEMENT_H4,
-  ELEMENT_H5,
-  ELEMENT_H6,
   ELEMENT_HR,
   getPluginType,
   insertEmptyCodeBlock,
@@ -15,6 +9,14 @@ import {
   setNodes,
 } from '@udecode/plate';
 
+import {
+  ELEMENT_H1,
+  ELEMENT_H2,
+  ELEMENT_H3,
+  ELEMENT_H4,
+  ELEMENT_H5,
+  ELEMENT_H6,
+} from '../heading/constants';
 import { preFormat } from './autoformatUtils';
 
 import type { MdAutoformatRule } from '../../plateTypes';
@@ -68,7 +70,7 @@ export const autoformatBlocks: MdAutoformatRule[] = [
     match: '```',
     triggerAtBlockStart: false,
     preFormat,
-    format: (editor) => {
+    format: editor => {
       insertEmptyCodeBlock(editor, {
         defaultType: getPluginType(editor, ELEMENT_DEFAULT),
         insertNodesOptions: { select: true },
@@ -79,7 +81,7 @@ export const autoformatBlocks: MdAutoformatRule[] = [
     mode: 'block',
     type: ELEMENT_HR,
     match: ['---', '—-', '___ '],
-    format: (editor) => {
+    format: editor => {
       setNodes(editor, { type: ELEMENT_HR });
       insertNodes(editor, {
         type: ELEMENT_DEFAULT,

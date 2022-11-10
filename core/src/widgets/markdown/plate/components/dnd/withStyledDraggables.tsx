@@ -4,21 +4,24 @@ import Tippy from '@tippyjs/react';
 import {
   ELEMENT_BLOCKQUOTE,
   ELEMENT_CODE_BLOCK,
+  ELEMENT_IMAGE,
+  ELEMENT_MEDIA_EMBED,
+  ELEMENT_OL,
+  ELEMENT_TABLE,
+  ELEMENT_TODO_LI,
+  ELEMENT_UL,
+  withDraggables,
+} from '@udecode/plate';
+
+import {
   ELEMENT_H1,
   ELEMENT_H2,
   ELEMENT_H3,
   ELEMENT_H4,
   ELEMENT_H5,
   ELEMENT_H6,
-  ELEMENT_IMAGE,
-  ELEMENT_MEDIA_EMBED,
-  ELEMENT_OL,
-  ELEMENT_PARAGRAPH,
-  ELEMENT_TABLE,
-  ELEMENT_TODO_LI,
-  ELEMENT_UL,
-  withDraggables,
-} from '@udecode/plate';
+} from '../../plugins/heading/constants';
+import { ELEMENT_PARAGRAPH } from '../../plugins/paragraph/createParagraphPlugin';
 
 import type { createPlateUI } from '@udecode/plate';
 import type { TippyProps } from '@tippyjs/react';
