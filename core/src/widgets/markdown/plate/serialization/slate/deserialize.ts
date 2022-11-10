@@ -178,11 +178,6 @@ export default function deserialize<T extends InputNodeTypes>(
             if (styleAttribute) {
               let styles: Record<string, string> = {};
               try {
-                console.log(
-                  styleAttribute.value.value
-                    .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ')
-                    .replace(/:[ ]*[']([^']+)[']/g, ': "$1"'),
-                );
                 styles =
                   JSON.parse(
                     styleAttribute.value.value
@@ -198,13 +193,18 @@ export default function deserialize<T extends InputNodeTypes>(
                   nodeStyles[key as keyof TextNodeStyles] = styles[key];
                 }
               });
-
-              return {
-                ...nodeStyles,
-                ...forceLeafNode(children as Array<TextNode>),
-                ...persistLeafFormats(children as Array<MdastNode>),
-              } as TextNode;
             }
+
+            const colorAttribute = node.attributes?.find(a => a.name === 'color');
+            if (colorAttribute) {
+              nodeStyles.color = colorAttribute.value;
+            }
+
+            return {
+              ...nodeStyles,
+              ...forceLeafNode(children as Array<TextNode>),
+              ...persistLeafFormats(children as Array<MdastNode>),
+            } as TextNode;
             break;
           default:
             console.log('unrecognized mdx node', node);
