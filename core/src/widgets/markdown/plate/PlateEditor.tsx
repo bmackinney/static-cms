@@ -97,33 +97,33 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
       createMdPlugins(
         [
           createParagraphPlugin(),
-          createBlockquotePlugin(),
-          createTodoListPlugin(),
+          // createBlockquotePlugin(),
+          // createTodoListPlugin(),
           createHeadingPlugin(),
-          createImagePlugin(),
-          createHorizontalRulePlugin(),
-          createLinkPlugin(linkPlugin),
-          createListPlugin(),
-          createTablePlugin(),
-          createMediaEmbedPlugin(),
-          createCodeBlockPlugin(),
-          createAlignPlugin(alignPlugin),
-          createBoldPlugin(),
-          createCodePlugin(),
-          createItalicPlugin(),
-          createHighlightPlugin(),
-          createUnderlinePlugin(),
-          createStrikethroughPlugin(),
-          createSubscriptPlugin(),
-          createSuperscriptPlugin(),
-          createFontColorPlugin(),
-          createFontBackgroundColorPlugin(),
-          createFontSizePlugin(),
-          createKbdPlugin(),
-          createNodeIdPlugin(),
-          createDndPlugin({ options: { enableScroller: true } }),
-          dragOverCursorPlugin,
-          createIndentPlugin(indentPlugin),
+          // createImagePlugin(),
+          // createHorizontalRulePlugin(),
+          // createLinkPlugin(linkPlugin),
+          // createListPlugin(),
+          // createTablePlugin(),
+          // createMediaEmbedPlugin(),
+          // createCodeBlockPlugin(),
+          // createAlignPlugin(alignPlugin),
+          // createBoldPlugin(),
+          // createCodePlugin(),
+          // createItalicPlugin(),
+          // createHighlightPlugin(),
+          // createUnderlinePlugin(),
+          // createStrikethroughPlugin(),
+          // createSubscriptPlugin(),
+          // createSuperscriptPlugin(),
+          // createFontColorPlugin(),
+          // createFontBackgroundColorPlugin(),
+          // createFontSizePlugin(),
+          // createKbdPlugin(),
+          // createNodeIdPlugin(),
+          // createDndPlugin({ options: { enableScroller: true } }),
+          // dragOverCursorPlugin,
+          // createIndentPlugin(indentPlugin),
           createAutoformatPlugin<AutoformatPlugin<MdValue, MdEditor>, MdValue, MdEditor>(
             autoformatPlugin,
           ),
@@ -131,14 +131,14 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
           createSoftBreakPlugin(softBreakPlugin),
           createExitBreakPlugin(exitBreakPlugin),
           createNormalizeTypesPlugin(forcedLayoutPlugin),
-          createTrailingBlockPlugin(trailingBlockPlugin),
-          createSelectOnBackspacePlugin(selectOnBackspacePlugin),
-          createComboboxPlugin(),
-          createMentionPlugin(),
-          createDeserializeMdPlugin(),
-          createDeserializeCsvPlugin(),
-          createDeserializeDocxPlugin(),
-          createJuicePlugin() as MdPlatePlugin,
+          // createTrailingBlockPlugin(trailingBlockPlugin),
+          // createSelectOnBackspacePlugin(selectOnBackspacePlugin),
+          // createComboboxPlugin(),
+          // createMentionPlugin(),
+          // createDeserializeMdPlugin(),
+          // createDeserializeCsvPlugin(),
+          // createDeserializeDocxPlugin(),
+          // createJuicePlugin() as MdPlatePlugin,
         ],
         {
           components: withStyledDraggables(components),
@@ -151,13 +151,13 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
   return (
     <StyledPlateEditor>
       <DndProvider backend={HTML5Backend}>
-        <PlateProvider<MdValue> initialValue={initialValue} plugins={plugins}>
+        <PlateProvider<MdValue> initialValue={initialValue} plugins={plugins} onChange={onChange}>
           <Toolbar>
             <ToolbarButtons />
           </Toolbar>
 
           <div ref={containerRef} style={styles.container}>
-            <Plate editableProps={editableProps} onChange={onChange}>
+            <Plate editableProps={editableProps}>
               <MarkBalloonToolbar />
               <CursorOverlayContainer containerRef={containerRef} />
             </Plate>

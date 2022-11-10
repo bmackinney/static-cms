@@ -66,8 +66,12 @@ const MarkdownControl = ({
 
   const handleOnChange = useCallback(
     (slateValue: MdValue) => {
-      const newMarkdownValue = slateValue.map(v => serialize(v as BlockType | LeafType)).join('');
-      console.log('newMarkdownValue', newMarkdownValue);
+      const newMarkdownValue = slateValue.map(v => {
+        const response = serialize(v as BlockType | LeafType);
+        console.log(v.type, v, response);
+        return response;
+      }).join('');
+      console.log('slateValue', slateValue, 'newMarkdownValue', newMarkdownValue);
       // const newValue = editorRef.current?.getInstance().getMarkdown() ?? '';
       // if (newValue !== internalValue) {
       //   setInternalValue(newValue);
@@ -179,6 +183,8 @@ const MarkdownControl = ({
 
   const [slateValue, loaded] = useMarkdownToSlate(internalValue);
 
+  console.log('slateValue', slateValue);
+
   return useMemo(
     () => (
       <StyledEditorWrapper key="markdown-control-wrapper">
@@ -194,7 +200,7 @@ const MarkdownControl = ({
         <Outline key="markdown-control-outline" hasLabel hasError={hasErrors} />
       </StyledEditorWrapper>
     ),
-    [handleLabelClick, hasErrors, hasFocus, label, loaded, slateValue],
+    [handleLabelClick, handleOnChange, hasErrors, hasFocus, label, loaded, slateValue],
   );
 };
 
