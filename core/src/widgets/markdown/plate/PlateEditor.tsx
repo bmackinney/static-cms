@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
@@ -82,11 +82,20 @@ const styles: Record<string, CSSProperties> = {
 };
 
 interface PlateEditorProps {
-  initialValue: string;
+  value: string;
 }
 
 const PlateEditor = ({ initialValue }: PlateEditorProps) => {
   const containerRef = useRef(null);
+  const [internalValue, setInternalValue] = useState<MdValue>([]);
+
+  unified()
+  .use(markdown)
+  .use(slate)
+  .process(fs.readFileSync('example.md'), (err, file) => {
+    if (err) throw err;
+    console.log({ file });
+  });
 
   const plugins = useMemo(
     () =>
