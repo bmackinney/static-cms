@@ -31,7 +31,6 @@ import {
   createResetNodePlugin,
   createSelectOnBackspacePlugin,
   createSoftBreakPlugin,
-  createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
   createTablePlugin,
@@ -40,6 +39,8 @@ import {
   createUnderlinePlugin,
   Plate,
   PlateProvider,
+  StyledLeaf,
+  withProps,
 } from '@udecode/plate';
 import { createJuicePlugin } from '@udecode/plate-juice';
 import React, { useMemo, useRef } from 'react';
@@ -83,6 +84,9 @@ import {
   ELEMENT_PARAGRAPH,
 } from './plugins/paragraph/createParagraphPlugin';
 import Paragraph from './plugins/paragraph/Paragraph';
+import createStrikethroughPlugin, {
+  MARK_STRIKETHROUGH,
+} from './plugins/strikethrough/createStrikethroughPlugin';
 
 import type { AutoformatPlugin } from '@udecode/plate';
 import type { CSSProperties } from 'react';
@@ -101,6 +105,7 @@ const components = createPlateUI({
   [ELEMENT_H5]: Heading5,
   [ELEMENT_H6]: Heading6,
   [ELEMENT_PARAGRAPH]: Paragraph,
+  [MARK_STRIKETHROUGH]: withProps(StyledLeaf, { as: 's' }),
 });
 
 const styles: Record<string, CSSProperties> = {
@@ -126,21 +131,21 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
           // createImagePlugin(),
           // createHorizontalRulePlugin(),
           // createLinkPlugin(linkPlugin),
-          // createListPlugin(),
+          createListPlugin(),
           // createTablePlugin(),
           // createMediaEmbedPlugin(),
           // createCodeBlockPlugin(),
           // createAlignPlugin(alignPlugin),
           createBoldPlugin(),
-          // createCodePlugin(),
-          // createItalicPlugin(),
+          createCodePlugin(),
+          createItalicPlugin(),
           // createHighlightPlugin(),
-          // createUnderlinePlugin(),
-          // createStrikethroughPlugin(),
-          // createSubscriptPlugin(),
-          // createSuperscriptPlugin(),
-          // createFontColorPlugin(),
-          // createFontBackgroundColorPlugin(),
+          createUnderlinePlugin(),
+          createStrikethroughPlugin(),
+          createSubscriptPlugin(),
+          createSuperscriptPlugin(),
+          createFontColorPlugin(),
+          createFontBackgroundColorPlugin(),
           // createFontSizePlugin(),
           // createKbdPlugin(),
           // createNodeIdPlugin(),
@@ -153,8 +158,7 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
           createResetNodePlugin(resetBlockTypePlugin),
           createSoftBreakPlugin(softBreakPlugin),
           createExitBreakPlugin(exitBreakPlugin),
-          // createNormalizeTypesPlugin(forcedLayoutPlugin),
-          // createTrailingBlockPlugin(trailingBlockPlugin),
+          createTrailingBlockPlugin(trailingBlockPlugin),
           // createSelectOnBackspacePlugin(selectOnBackspacePlugin),
           // createComboboxPlugin(),
           // createMentionPlugin(),
@@ -170,7 +174,6 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
     [],
   );
 
-  console.log('plate editor rendering!');
   return (
     <StyledPlateEditor>
       <DndProvider backend={HTML5Backend}>

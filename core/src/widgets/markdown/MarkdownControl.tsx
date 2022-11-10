@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import isEmpty from 'lodash/isEmpty';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import uuid from 'uuid';
-import { serialize } from 'remark-slate';
 
 import FieldLabel from '../../components/UI/FieldLabel';
 import Outline from '../../components/UI/Outline';
@@ -16,10 +15,11 @@ import usePlugins from './hooks/usePlugins';
 import useToolbarItems from './hooks/useToolbarItems';
 import useMarkdownToSlate from './plate/hooks/useMarkdownToSlate';
 import PlateEditor from './plate/PlateEditor';
+import serialize from './plate/serialization/serializer';
 
+import type { BlockType, LeafType } from 'remark-slate';
 import type { MarkdownField, MediaLibrary, WidgetControlProps } from '../../interface';
 import type { MdValue } from './plate/plateTypes';
-import type { BlockType, LeafType } from 'remark-slate';
 
 const StyledEditorWrapper = styled('div')`
   position: relative;
@@ -69,11 +69,11 @@ const MarkdownControl = ({
       const newValue = slateValue
         .map(v => {
           const response = serialize(v as BlockType | LeafType)?.replace(/<br[ ]*[/]{0,1}>/g, '\n');
-          console.log(v.type, v, response);
+          console.log('[Plate] slate node to markdown', v.type, v, response);
           return response;
         })
         .join('\n');
-      console.log('slateValue', slateValue, 'newMarkdownValue', newValue);
+      console.log('[Plate] slateValue', slateValue, 'newMarkdownValue', newValue);
       // const newValue = editorRef.current?.getInstance().getMarkdown() ?? '';
       if (newValue !== internalValue) {
         setInternalValue(newValue);
@@ -185,7 +185,7 @@ const MarkdownControl = ({
 
   const [slateValue, loaded] = useMarkdownToSlate(internalValue);
 
-  console.log('slateValue', slateValue);
+  console.log('[Plate] slateValue', slateValue);
 
   return useMemo(
     () => (

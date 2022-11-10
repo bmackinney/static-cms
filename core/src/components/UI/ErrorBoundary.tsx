@@ -45,7 +45,7 @@ function buildIssueTemplate(config: Config) {
   }
   const template = getIssueTemplate(
     version,
-    config.backend.name,
+    config?.backend?.name,
     navigator.userAgent,
     yaml.stringify(config),
   );

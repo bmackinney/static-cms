@@ -3,11 +3,12 @@ import {
   MARK_CODE,
   MARK_HIGHLIGHT,
   MARK_ITALIC,
-  MARK_STRIKETHROUGH,
   MARK_SUBSCRIPT,
   MARK_SUPERSCRIPT,
   MARK_UNDERLINE,
 } from '@udecode/plate';
+
+import { MARK_STRIKETHROUGH } from '../strikethrough/createStrikethroughPlugin';
 
 import type { MdAutoformatRule } from '../../plateTypes';
 
