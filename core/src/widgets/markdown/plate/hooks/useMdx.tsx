@@ -6,6 +6,7 @@ import { VFile } from 'vfile';
 import { VFileMessage } from 'vfile-message';
 
 import useDebouncedCallback from '../../../../lib/util/useDebouncedCallback';
+import flattenListItemParagraphs from '../serialization/slate/flattenListItemParagraphs';
 
 export interface UseMdxState {
   file: VFile | null;
@@ -21,7 +22,7 @@ export default function useMdx(input: string): [UseMdxState, (value: string) => 
     const options: any = {
       ...runtime,
       useDynamicImport: true,
-      remarkPlugins: [remarkGfm],
+      remarkPlugins: [remarkGfm, flattenListItemParagraphs],
     };
 
     try {
