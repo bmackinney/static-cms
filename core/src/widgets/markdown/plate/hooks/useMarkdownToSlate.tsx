@@ -13,6 +13,8 @@ const useMarkdownToSlate = (markdownValue: string): [MdValue, boolean] => {
   const [slateValue, setSlateValue] = useState<MdValue>([]);
 
   useEffect(() => {
+    console.log('UNIFIED', unified().use(markdown).parse(markdownValue));
+
     unified()
       .use(markdown)
       .use(gfm)
