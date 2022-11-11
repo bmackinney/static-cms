@@ -5,6 +5,7 @@ import markdown from 'remark-parse';
 import { unified } from 'unified';
 
 import toSlatePlugin from '../serialization/slate/toSlatePlugin';
+import flattenListItemParagraphs from '../serialization/slate/flattenListItemParagraphs';
 
 import type { MdValue } from '../plateTypes';
 
@@ -17,6 +18,7 @@ const useMarkdownToSlate = (markdownValue: string): [MdValue, boolean] => {
       .use(markdown)
       .use(gfm)
       .use(mdx)
+      .use(flattenListItemParagraphs)
       .use(toSlatePlugin)
       .process(markdownValue, (err, file) => {
         if (err) {

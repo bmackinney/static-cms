@@ -125,6 +125,7 @@
     "symbol-observable": "4.0.0",
     "ts-loader": "9.4.1",
     "unified": "^10.1.2",
+    "unist-util-visit": "^4.1.1",
     "uploadcare-widget": "3.19.0",
     "uploadcare-widget-tab-effects": "1.5.0",
     "url": "0.11.0",

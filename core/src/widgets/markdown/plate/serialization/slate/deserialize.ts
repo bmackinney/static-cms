@@ -76,6 +76,7 @@ export default function deserialize<T extends InputNodeTypes>(
 
   const nodeChildren = node.children;
   if (nodeChildren && Array.isArray(nodeChildren) && nodeChildren.length > 0) {
+    console.log('[DESERIALIZE][MAPPING CHILDREN] type', node);
     children = nodeChildren.flatMap((c: MdastNode) =>
       deserialize(
         {
@@ -86,6 +87,8 @@ export default function deserialize<T extends InputNodeTypes>(
       ),
     );
   }
+
+  console.log('[DESERIALIZE] type', node, children);
 
   switch (node.type) {
     case 'heading':
@@ -101,6 +104,9 @@ export default function deserialize<T extends InputNodeTypes>(
     case 'listItem':
       return { type: types.listItem, children } as ListItemNode<T>;
     case 'paragraph':
+      if ('ordered' in node) {
+        return children;
+      }
       return { type: types.paragraph, children } as ParagraphNode<T>;
     case 'link':
       return {
