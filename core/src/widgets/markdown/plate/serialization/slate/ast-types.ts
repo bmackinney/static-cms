@@ -6,10 +6,11 @@ export const MarkNodeTypes = {
 
 export const NodeTypes = {
   paragraph: 'p',
-  block_quote: 'block_quote',
+  block_quote: 'blockquote',
   code_block: 'code_block',
   code_line: 'code_line',
-  link: 'link',
+  code_syntax: 'code_syntax',
+  link: 'a',
   ul_list: 'ul',
   ol_list: 'ol',
   listItem: 'li',
@@ -27,7 +28,7 @@ export const NodeTypes = {
   delete_mark: 'strikethrough',
   inline_code_mark: 'code',
   thematic_break: 'thematic_break',
-  image: 'image',
+  image: 'img',
   ...MarkNodeTypes,
 } as const;
 
@@ -96,17 +97,6 @@ export interface InputNodeTypes {
   image: string;
 }
 
-type RecursivePartial<T> = {
-  [P in keyof T]?: RecursivePartial<T[P]>;
-};
-
-export interface OptionType<T extends InputNodeTypes = InputNodeTypes> {
-  nodeTypes?: RecursivePartial<T>;
-  linkDestinationKey?: string;
-  imageSourceKey?: string;
-  imageCaptionKey?: string;
-}
-
 export type MdastNode = BaseMdastNode | MdxMdastNode;
 
 export interface BaseMdastNode {
@@ -160,10 +150,15 @@ export interface TextNodeStyles {
 
 export type TextNode = { text?: string | undefined } & TextNodeStyles;
 
+export type CodeLineNode<T extends InputNodeTypes> = {
+  type: T['code_line'];
+  children: Array<TextNode>;
+};
+
 export type CodeBlockNode<T extends InputNodeTypes> = {
   type: T['code_block'];
-  language: string | undefined;
-  children: Array<TextNode>;
+  lang: string | undefined;
+  children: Array<CodeLineNode<T>>;
 };
 
 export type HeadingNode<T extends InputNodeTypes> = {
@@ -196,13 +191,14 @@ export type ParagraphNode<T extends InputNodeTypes> = {
 export type LinkNode<T extends InputNodeTypes> = {
   type: T['link'];
   children: Array<DeserializedNode<T>>;
-  [urlKey: string]: string | undefined | Array<DeserializedNode<T>>;
+  url: string | undefined;
 };
 
 export type ImageNode<T extends InputNodeTypes> = {
   type: T['image'];
   children: Array<DeserializedNode<T>>;
-  [sourceOrCaptionKey: string]: string | undefined | Array<DeserializedNode<T>>;
+  url: string | undefined;
+  caption: TextNode;
 };
 
 export type BlockQuoteNode<T extends InputNodeTypes> = {

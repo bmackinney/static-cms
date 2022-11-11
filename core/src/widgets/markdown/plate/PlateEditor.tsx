@@ -1,13 +1,17 @@
 import { styled } from '@mui/material/styles';
 import {
   createAutoformatPlugin,
+  createBlockquotePlugin,
   createBoldPlugin,
+  createCodeBlockPlugin,
   createCodePlugin,
   createExitBreakPlugin,
   createFontBackgroundColorPlugin,
   createFontColorPlugin,
   createHeadingPlugin,
+  createImagePlugin,
   createItalicPlugin,
+  createLinkPlugin,
   createListPlugin,
   createParagraphPlugin,
   createPlateUI,
@@ -16,6 +20,7 @@ import {
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
+  createTablePlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
   ELEMENT_PARAGRAPH,
@@ -34,6 +39,7 @@ import { createMdPlugins } from './plateTypes';
 import { autoformatPlugin } from './plugins/autoformat/autoformatPlugin';
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
+import { linkPlugin } from './plugins/link/linkPlugin';
 import Paragraph from './plugins/paragraph/Paragraph';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
@@ -69,16 +75,16 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
       createMdPlugins(
         [
           createParagraphPlugin(),
-          // createBlockquotePlugin(),
+          createBlockquotePlugin(),
           // createTodoListPlugin(),
           createHeadingPlugin(),
-          // createImagePlugin(),
+          createImagePlugin(),
           // createHorizontalRulePlugin(),
-          // createLinkPlugin(linkPlugin),
+          createLinkPlugin(linkPlugin),
           createListPlugin(),
-          // createTablePlugin(),
+          createTablePlugin(),
           // createMediaEmbedPlugin(),
-          // createCodeBlockPlugin(),
+          createCodeBlockPlugin(),
           // createAlignPlugin(alignPlugin),
           createBoldPlugin(),
           createCodePlugin(),

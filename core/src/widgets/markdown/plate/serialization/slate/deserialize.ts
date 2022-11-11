@@ -15,7 +15,6 @@ import type {
   ListNode,
   MarkNode,
   MdastNode,
-  OptionType,
   ParagraphNode,
   StyleMdxMdastNodeAttribute,
   TextNode,
@@ -55,36 +54,17 @@ function mdxToMark<T extends InputNodeTypes>(
   } as unknown as MarkNode<T>;
 }
 
-export default function deserialize<T extends InputNodeTypes>(
-  node: MdastNode,
-  opts?: OptionType<T>,
-) {
-  const types = {
-    ...NodeTypes,
-    ...opts?.nodeTypes,
-    heading: {
-      ...NodeTypes.heading,
-      ...opts?.nodeTypes?.heading,
-    },
-  };
-
-  const linkDestinationKey = opts?.linkDestinationKey ?? 'link';
-  const imageSourceKey = opts?.imageSourceKey ?? 'link';
-  const imageCaptionKey = opts?.imageCaptionKey ?? 'caption';
-
+export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
   let children: Array<DeserializedNode<T>> = [{ text: '' }];
 
   const nodeChildren = node.children;
   if (nodeChildren && Array.isArray(nodeChildren) && nodeChildren.length > 0) {
     console.log('[DESERIALIZE][MAPPING CHILDREN] type', node);
     children = nodeChildren.flatMap((c: MdastNode) =>
-      deserialize(
-        {
-          ...c,
-          ordered: node.ordered || false,
-        },
-        opts,
-      ),
+      deserialize({
+        ...c,
+        ordered: node.ordered || false,
+      }),
     );
   }
 
@@ -93,48 +73,51 @@ export default function deserialize<T extends InputNodeTypes>(
   switch (node.type) {
     case 'heading':
       return {
-        type: types.heading[node.depth || 1],
+        type: NodeTypes.heading[node.depth || 1],
         children,
       } as HeadingNode<T>;
     case 'list':
       return {
-        type: node.ordered ? types.ol_list : types.ul_list,
+        type: node.ordered ? NodeTypes.ol_list : NodeTypes.ul_list,
         children,
       } as ListNode<T>;
     case 'listItem':
-      return { type: types.listItem, children } as ListItemNode<T>;
+      return { type: NodeTypes.listItem, children } as ListItemNode<T>;
     case 'paragraph':
       if ('ordered' in node) {
         return children;
       }
-      return { type: types.paragraph, children } as ParagraphNode<T>;
+      return { type: NodeTypes.paragraph, children } as ParagraphNode<T>;
     case 'link':
       return {
-        type: types.link,
-        [linkDestinationKey]: node.url,
+        type: NodeTypes.link,
+        url: node.url,
         children,
       } as LinkNode<T>;
     case 'image':
       return {
-        type: types.image,
+        type: NodeTypes.image,
         children: [{ text: '' }],
-        [imageSourceKey]: node.url,
-        [imageCaptionKey]: node.alt,
+        url: node.url,
+        caption: [{ text: node.alt ?? '' }],
       } as ImageNode<T>;
     case 'blockquote':
-      return { type: types.block_quote, children } as BlockQuoteNode<T>;
+      return { type: NodeTypes.block_quote, children } as BlockQuoteNode<T>;
     case 'code':
       return {
-        type: types.code_block,
-        language: node.lang,
-        children: [{ text: node.value }],
+        type: NodeTypes.code_block,
+        lang: node.lang,
+        children: (node.value ?? '').split('\n').map(line => ({
+          type: NodeTypes.code_line,
+          children: [{ text: line }],
+        })),
       } as CodeBlockNode<T>;
 
     case 'html':
       if (node.value?.includes('<br>')) {
         return {
           break: true,
-          type: types.paragraph,
+          type: NodeTypes.paragraph,
           children: [{ text: node.value?.replace(/<br>/g, '') || '' }],
         } as ParagraphNode<T>;
       }
@@ -142,31 +125,31 @@ export default function deserialize<T extends InputNodeTypes>(
 
     case 'emphasis':
       return {
-        [types.emphasis_mark as string]: true,
+        [NodeTypes.emphasis_mark]: true,
         ...forceLeafNode(children as Array<TextNode>),
         ...persistLeafFormats(children as Array<MdastNode>),
       } as unknown as ItalicNode<T>;
     case 'strong':
       return {
-        [types.strong_mark as string]: true,
+        [NodeTypes.strong_mark]: true,
         ...forceLeafNode(children as Array<TextNode>),
         ...persistLeafFormats(children as Array<MdastNode>),
       };
     case 'delete':
       return {
-        [types.delete_mark as string]: true,
+        [NodeTypes.delete_mark]: true,
         ...forceLeafNode(children as Array<TextNode>),
         ...persistLeafFormats(children as Array<MdastNode>),
       };
     case 'inlineCode':
       return {
-        [types.inline_code_mark as string]: true,
+        [NodeTypes.inline_code_mark]: true,
         text: node.value,
         ...persistLeafFormats(children as Array<MdastNode>),
       };
     case 'thematicBreak':
       return {
-        type: types.thematic_break,
+        type: NodeTypes.thematic_break,
         children: [{ text: '' }],
       } as ThematicBreakNode<T>;
 
@@ -227,6 +210,7 @@ export default function deserialize<T extends InputNodeTypes>(
       return { text: node.value || '' };
 
     case 'text':
+    case 'tableCell':
       return { text: node.value || '' };
     default:
       console.warn('Unrecognized mdast node, proceeding as text', node);

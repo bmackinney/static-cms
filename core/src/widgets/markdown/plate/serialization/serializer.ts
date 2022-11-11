@@ -44,6 +44,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
 
   let children = text;
 
+  console.log('Processing', chunk);
   if (!isLeafNode(chunk)) {
     children = chunk.children
       .map((c: MdBlockType | MdLeafType) => {
@@ -96,14 +97,15 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
   if (
     !ignoreParagraphNewline &&
     (text === '' || text === '\n') &&
-    chunk.parentType === NodeTypes.paragraph
+    chunk.parentType === NodeTypes.paragraph &&
+    type !== NodeTypes.image
   ) {
     type = NodeTypes.paragraph;
     children = BREAK_TAG;
   }
 
   if (children === '' && !VOID_ELEMENTS.find(k => NodeTypes[k] === type)) {
-    console.log('skipping', chunk)
+    console.log('skipping', chunk);
     return;
   }
 
@@ -172,9 +174,11 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
   }
 
   if (!type) {
+    console.log('No type! Returning just children...', chunk);
     return children;
   }
 
+  console.log('Type check...', `"${type}"`, chunk, children);
   switch (type) {
     case NodeTypes.heading[1]:
       return `# ${children}\n`;
@@ -199,9 +203,13 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       return `\`\`\`${(chunk as MdBlockType).language || ''}\n${children}\n\`\`\`\n`;
 
     case NodeTypes.link:
-      return `[${children}](${(chunk as MdBlockType).link || ''})`;
+      return `[${children}](${(chunk as MdBlockType).url || ''})`;
     case NodeTypes.image:
-      return `![${(chunk as MdBlockType).caption}](${(chunk as MdBlockType).link || ''})`;
+      console.log('IMAGE', chunk);
+      const caption = (chunk as MdBlockType).caption ?? [];
+      return `![${caption.length > 0 ? caption[0].text ?? '' : ''}](${
+        (chunk as MdBlockType).url || ''
+      })`;
 
     case NodeTypes.ul_list:
     case NodeTypes.ol_list:
@@ -210,8 +218,8 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
     case NodeTypes.listItem:
       const isOL = chunk && chunk.parentType === NodeTypes.ol_list;
       const treatAsLeaf =
-        (chunk as MdBlockType).children.length === 1 &&
-        (isLeafNode((chunk as MdBlockType).children[0]) ||
+        (chunk as MdBlockType).children.length >= 1 &&
+        ((chunk as MdBlockType).children.reduce((acc, child) => acc && isLeafNode(child), true) ||
           (listDepth === 0 && ((chunk as MdBlockType).children[0] as BlockType).type === 'lic'));
 
       let spacer = '';
