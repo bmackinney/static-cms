@@ -2,7 +2,9 @@
 // import { BlockType, defaultNodeTypes, LeafType, NodeTypes } from './ast-types';
 import escapeHtml from 'escape-html';
 
-import type { BlockType, LeafType, NodeTypes } from 'remark-slate';
+import { NodeTypes } from './slate/ast-types';
+
+import type { BlockType, LeafType } from 'remark-slate';
 
 interface FontStyles {
   color?: string;
@@ -28,33 +30,9 @@ const isLeafNode = (node: MdBlockType | MdLeafType): node is MdLeafType => {
   return typeof (node as MdLeafType).text === 'string';
 };
 
-const VOID_ELEMENTS: Array<keyof NodeTypes> = ['thematic_break', 'image'];
+const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image'];
 
 const BREAK_TAG = '<br>';
-
-const nodeTypes: NodeTypes = {
-  paragraph: 'p',
-  block_quote: 'block_quote',
-  code_block: 'code_block',
-  link: 'link',
-  ul_list: 'ul',
-  ol_list: 'ol',
-  listItem: 'li',
-  heading: {
-    1: 'heading_one',
-    2: 'heading_two',
-    3: 'heading_three',
-    4: 'heading_four',
-    5: 'heading_five',
-    6: 'heading_six',
-  },
-  emphasis_mark: 'italic',
-  strong_mark: 'bold',
-  delete_mark: 'strikeThrough',
-  inline_code_mark: 'code',
-  thematic_break: 'thematic_break',
-  image: 'image',
-};
 
 export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options = {}) {
   const { ignoreParagraphNewline = false, listDepth = 0 } = opts;
@@ -62,7 +40,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
   const text = (chunk as MdLeafType).text || '';
   let type = (chunk as MdBlockType).type || '';
 
-  const LIST_TYPES = [nodeTypes.ul_list, nodeTypes.ol_list];
+  const LIST_TYPES = [NodeTypes.ul_list, NodeTypes.ol_list];
 
   let children = text;
 
@@ -71,8 +49,6 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       .map((c: MdBlockType | MdLeafType) => {
         const isList = !isLeafNode(c) ? (LIST_TYPES as string[]).includes(c.type || '') : false;
         const selfIsList = (LIST_TYPES as string[]).includes(chunk.type || '');
-
-        console.log('child is list?', isList, c, 'self is list?', selfIsList, chunk);
 
         // Links can have the following shape
         // In which case we don't want to surround
@@ -88,7 +64,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
         let childrenHasLink = false;
 
         if (!isLeafNode(chunk) && Array.isArray(chunk.children)) {
-          childrenHasLink = chunk.children.some(f => !isLeafNode(f) && f.type === nodeTypes.link);
+          childrenHasLink = chunk.children.some(f => !isLeafNode(f) && f.type === NodeTypes.link);
         }
 
         return serialize(
@@ -120,13 +96,13 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
   if (
     !ignoreParagraphNewline &&
     (text === '' || text === '\n') &&
-    chunk.parentType === nodeTypes.paragraph
+    chunk.parentType === NodeTypes.paragraph
   ) {
-    type = nodeTypes.paragraph;
+    type = NodeTypes.paragraph;
     children = BREAK_TAG;
   }
 
-  if (children === '' && !VOID_ELEMENTS.find(k => nodeTypes[k] === type)) {
+  if (children === '' && !VOID_ELEMENTS.find(k => NodeTypes[k] === type)) {
     return;
   }
 
@@ -194,43 +170,44 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
     }
   }
 
-  console.log('type', type);
+  if (!type) {
+    return children;
+  }
+
   switch (type) {
-    case nodeTypes.heading[1]:
+    case NodeTypes.heading[1]:
       return `# ${children}\n`;
-    case nodeTypes.heading[2]:
+    case NodeTypes.heading[2]:
       return `## ${children}\n`;
-    case nodeTypes.heading[3]:
+    case NodeTypes.heading[3]:
       return `### ${children}\n`;
-    case nodeTypes.heading[4]:
+    case NodeTypes.heading[4]:
       return `#### ${children}\n`;
-    case nodeTypes.heading[5]:
+    case NodeTypes.heading[5]:
       return `##### ${children}\n`;
-    case nodeTypes.heading[6]:
+    case NodeTypes.heading[6]:
       return `###### ${children}\n`;
 
-    case nodeTypes.block_quote:
+    case NodeTypes.block_quote:
       // For some reason, marked is parsing blockquotes w/ one new line
       // as contiued blockquotes, so adding two new lines ensures that doesn't
       // happen
       return `> ${children}\n\n`;
 
-    case nodeTypes.code_block:
+    case NodeTypes.code_block:
       return `\`\`\`${(chunk as MdBlockType).language || ''}\n${children}\n\`\`\`\n`;
 
-    case nodeTypes.link:
+    case NodeTypes.link:
       return `[${children}](${(chunk as MdBlockType).link || ''})`;
-    case nodeTypes.image:
+    case NodeTypes.image:
       return `![${(chunk as MdBlockType).caption}](${(chunk as MdBlockType).link || ''})`;
 
-    case nodeTypes.ul_list:
-    case nodeTypes.ol_list:
-      console.log('its a list!', chunk, children);
+    case NodeTypes.ul_list:
+    case NodeTypes.ol_list:
       return `\n${children}\n`;
 
-    case nodeTypes.listItem:
-      console.log('its a list item!', chunk, children);
-      const isOL = chunk && chunk.parentType === nodeTypes.ol_list;
+    case NodeTypes.listItem:
+      const isOL = chunk && chunk.parentType === NodeTypes.ol_list;
       const treatAsLeaf =
         (chunk as MdBlockType).children.length === 1 &&
         (isLeafNode((chunk as MdBlockType).children[0]) ||
@@ -247,10 +224,10 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       }
       return `${spacer}${isOL ? '1.' : '-'} ${children}${treatAsLeaf ? '\n' : ''}`;
 
-    case nodeTypes.paragraph:
+    case NodeTypes.paragraph:
       return `${children}\n`;
 
-    case nodeTypes.thematic_break:
+    case NodeTypes.thematic_break:
       return `---\n`;
 
     case 'lic':

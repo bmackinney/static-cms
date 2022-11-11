@@ -1,9 +1,10 @@
 /* eslint-disable no-case-declarations */
-import { allowedStyles, defaultNodeTypes, markNodeTypes } from './ast-types';
+import { allowedStyles, NodeTypes, MarkNodeTypes } from './ast-types';
 
 import type {
   BlockQuoteNode,
   CodeBlockNode,
+  ColorMdxMdastNodeAttribute,
   DeserializedNode,
   HeadingNode,
   ImageNode,
@@ -16,6 +17,7 @@ import type {
   MdastNode,
   OptionType,
   ParagraphNode,
+  StyleMdxMdastNodeAttribute,
   TextNode,
   TextNodeStyles,
   ThematicBreakNode,
@@ -43,11 +45,11 @@ function persistLeafFormats(
 }
 
 function mdxToMark<T extends InputNodeTypes>(
-  mark: keyof typeof markNodeTypes,
+  mark: keyof typeof MarkNodeTypes,
   children: DeserializedNode<T>[],
 ): MarkNode<T> {
   return {
-    [markNodeTypes[mark] as string]: true,
+    [MarkNodeTypes[mark] as string]: true,
     ...forceLeafNode(children as Array<TextNode>),
     ...persistLeafFormats(children as Array<MdastNode>),
   } as unknown as MarkNode<T>;
@@ -58,10 +60,10 @@ export default function deserialize<T extends InputNodeTypes>(
   opts?: OptionType<T>,
 ) {
   const types = {
-    ...defaultNodeTypes,
+    ...NodeTypes,
     ...opts?.nodeTypes,
     heading: {
-      ...defaultNodeTypes.heading,
+      ...NodeTypes.heading,
       ...opts?.nodeTypes?.heading,
     },
   };
@@ -173,7 +175,9 @@ export default function deserialize<T extends InputNodeTypes>(
             return mdxToMark('underline_mark', children);
           case 'font':
             console.log('font node', node, children);
-            const styleAttribute = node.attributes?.find(a => a.name === 'style');
+            const styleAttribute = node.attributes?.find(
+              a => a.name === 'style',
+            ) as StyleMdxMdastNodeAttribute;
             const nodeStyles: TextNodeStyles = {};
             if (styleAttribute) {
               let styles: Record<string, string> = {};
@@ -195,7 +199,9 @@ export default function deserialize<T extends InputNodeTypes>(
               });
             }
 
-            const colorAttribute = node.attributes?.find(a => a.name === 'color');
+            const colorAttribute = node.attributes?.find(
+              a => a.name === 'color',
+            ) as ColorMdxMdastNodeAttribute;
             if (colorAttribute) {
               nodeStyles.color = colorAttribute.value;
             }
@@ -207,7 +213,7 @@ export default function deserialize<T extends InputNodeTypes>(
             } as TextNode;
             break;
           default:
-            console.log('unrecognized mdx node', node);
+            console.warn('unrecognized mdx node', node);
             break;
         }
       }
@@ -217,7 +223,7 @@ export default function deserialize<T extends InputNodeTypes>(
     case 'text':
       return { text: node.value || '' };
     default:
-      console.warn('Unrecognized mdast node, proceeding as text', node)
+      console.warn('Unrecognized mdast node, proceeding as text', node);
       return { text: node.value || '' };
   }
 }
