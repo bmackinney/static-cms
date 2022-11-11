@@ -8,10 +8,12 @@ export const NodeTypes = {
   paragraph: 'p',
   block_quote: 'block_quote',
   code_block: 'code_block',
+  code_line: 'code_line',
   link: 'link',
   ul_list: 'ul',
   ol_list: 'ol',
   listItem: 'li',
+  listItemChild: 'lic',
   heading: {
     1: 'h1',
     2: 'h2',
@@ -70,6 +72,7 @@ export interface InputNodeTypes {
   paragraph: string;
   block_quote: string;
   code_block: string;
+  code_line: string;
   link: string;
   ul_list: string;
   ol_list: string;

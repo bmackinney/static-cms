@@ -30,7 +30,7 @@ const isLeafNode = (node: MdBlockType | MdLeafType): node is MdLeafType => {
   return typeof (node as MdLeafType).text === 'string';
 };
 
-const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image'];
+const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image', 'code_line'];
 
 const BREAK_TAG = '<br>';
 
@@ -103,6 +103,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
   }
 
   if (children === '' && !VOID_ELEMENTS.find(k => NodeTypes[k] === type)) {
+    console.log('skipping', chunk)
     return;
   }
 
@@ -230,8 +231,11 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
     case NodeTypes.thematic_break:
       return `---\n`;
 
-    case 'lic':
+    case NodeTypes.listItemChild:
       return children;
+
+    case NodeTypes.code_line:
+      return `${children}\n`;
 
     default:
       console.warn('Unrecognized slate node, proceeding as text', `"${type}"`, chunk);
