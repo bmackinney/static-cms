@@ -220,7 +220,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       return `> ${children}\n\n`;
 
     case NodeTypes.code_block:
-      return `\`\`\`${(chunk as MdBlockType).language || ''}\n${children}\n\`\`\`\n`;
+      return `\`\`\`${(chunk as MdBlockType).lang || ''}\n${children}\n\`\`\`\n`;
 
     case NodeTypes.link:
       return `[${children}](${(chunk as MdBlockType).url || ''})`;

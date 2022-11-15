@@ -22,6 +22,7 @@ import {
   createSuperscriptPlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
+  ELEMENT_CODE_BLOCK,
   ELEMENT_PARAGRAPH,
   Plate,
   PlateProvider,
@@ -31,6 +32,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import MarkBalloonToolbar from './components/balloon-toolbar/MarkBalloonToolbar';
+import { CodeBlockElement } from './components/code-block';
 import { TableCellElement, TableElement, TableRowElement } from './components/table';
 import { Toolbar } from './components/toolbar/Toolbar';
 import { ToolbarButtons } from './components/ToolbarButtons';
@@ -67,6 +69,7 @@ const components = createPlateUI({
   [ELEMENT_TR]: TableRowElement,
   [ELEMENT_TH]: TableCellElement,
   [ELEMENT_TD]: TableCellElement,
+  [ELEMENT_CODE_BLOCK]: CodeBlockElement,
 });
 
 const styles: Record<string, CSSProperties> = {
