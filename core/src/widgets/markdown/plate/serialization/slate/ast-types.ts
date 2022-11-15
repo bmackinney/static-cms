@@ -15,6 +15,9 @@ export const NodeTypes = {
   ol_list: 'ol',
   listItem: 'li',
   listItemChild: 'lic',
+  table: 'table',
+  tableRow: 'tr',
+  tableCell: 'td',
   heading: {
     1: 'h1',
     2: 'h2',
@@ -67,34 +70,6 @@ export interface BlockType {
   language?: string;
   break?: boolean;
   children: Array<BlockType | LeafType>;
-}
-
-export interface InputNodeTypes {
-  paragraph: string;
-  block_quote: string;
-  code_block: string;
-  code_line: string;
-  link: string;
-  ul_list: string;
-  ol_list: string;
-  listItem: string;
-  heading: {
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-    5: string;
-    6: string;
-  };
-  emphasis_mark: string;
-  strong_mark: string;
-  delete_mark: string;
-  superscript_mark: string;
-  subscript_mark: string;
-  underline_mark: string;
-  inline_code_mark: string;
-  thematic_break: string;
-  image: string;
 }
 
 export type MdastNode = BaseMdastNode | MdxMdastNode;
@@ -150,98 +125,116 @@ export interface TextNodeStyles {
 
 export type TextNode = { text?: string | undefined } & TextNodeStyles;
 
-export type CodeLineNode<T extends InputNodeTypes> = {
-  type: T['code_line'];
+export type CodeLineNode = {
+  type: typeof NodeTypes['code_line'];
   children: Array<TextNode>;
 };
 
-export type CodeBlockNode<T extends InputNodeTypes> = {
-  type: T['code_block'];
+export type CodeBlockNode = {
+  type: typeof NodeTypes['code_block'];
   lang: string | undefined;
-  children: Array<CodeLineNode<T>>;
+  children: Array<CodeLineNode>;
 };
 
-export type HeadingNode<T extends InputNodeTypes> = {
+export type HeadingNode = {
   type:
-    | T['heading'][1]
-    | T['heading'][2]
-    | T['heading'][3]
-    | T['heading'][4]
-    | T['heading'][5]
-    | T['heading'][6];
-  children: Array<DeserializedNode<T>>;
+    | typeof NodeTypes['heading'][1]
+    | typeof NodeTypes['heading'][2]
+    | typeof NodeTypes['heading'][3]
+    | typeof NodeTypes['heading'][4]
+    | typeof NodeTypes['heading'][5]
+    | typeof NodeTypes['heading'][6];
+  children: Array<DeserializedNode>;
 };
 
-export type ListNode<T extends InputNodeTypes> = {
-  type: T['ol_list'] | T['ul_list'];
-  children: Array<DeserializedNode<T>>;
+export type ListNode = {
+  type: typeof NodeTypes['ol_list'] | typeof NodeTypes['ul_list'];
+  children: Array<DeserializedNode>;
 };
 
-export type ListItemNode<T extends InputNodeTypes> = {
-  type: T['listItem'];
-  children: Array<DeserializedNode<T>>;
+export type ListItemNode = {
+  type: typeof NodeTypes['listItem'];
+  children: Array<DeserializedNode>;
 };
 
-export type ParagraphNode<T extends InputNodeTypes> = {
-  type: T['paragraph'];
+export type ParagraphNode = {
+  type: typeof NodeTypes['paragraph'];
   break?: true;
-  children: Array<DeserializedNode<T>>;
+  children: Array<DeserializedNode>;
 };
 
-export type LinkNode<T extends InputNodeTypes> = {
-  type: T['link'];
-  children: Array<DeserializedNode<T>>;
+export type LinkNode = {
+  type: typeof NodeTypes['link'];
+  children: Array<DeserializedNode>;
   url: string | undefined;
 };
 
-export type ImageNode<T extends InputNodeTypes> = {
-  type: T['image'];
-  children: Array<DeserializedNode<T>>;
+export type ImageNode = {
+  type: typeof NodeTypes['image'];
+  children: Array<DeserializedNode>;
   url: string | undefined;
   caption: TextNode;
 };
 
-export type BlockQuoteNode<T extends InputNodeTypes> = {
-  type: T['block_quote'];
-  children: Array<DeserializedNode<T>>;
+export type TableNode = {
+  type: typeof NodeTypes['table'];
+  children: Array<TableRowNode>;
 };
 
-export type InlineCodeMarkNode<T extends InputNodeTypes> = {
-  type: T['inline_code_mark'];
+export type TableRowNode = {
+  type: typeof NodeTypes['tableRow'];
+  children: Array<TableCellNode>;
+};
+
+export type TableCellNode = {
+  type: typeof NodeTypes['tableCell'];
+  children: Array<DeserializedNode>;
+};
+
+export type BlockQuoteNode = {
+  type: typeof NodeTypes['block_quote'];
+  children: Array<DeserializedNode>;
+};
+
+export type InlineCodeMarkNode = {
+  type: typeof NodeTypes['inline_code_mark'];
   children: Array<TextNode>;
   language: string | undefined;
 };
 
-export type ThematicBreakNode<T extends InputNodeTypes> = {
-  type: T['thematic_break'];
-  children: Array<DeserializedNode<T>>;
+export type ThematicBreakNode = {
+  type: typeof NodeTypes['thematic_break'];
+  children: Array<DeserializedNode>;
 };
 
-export type ItalicNode<T extends InputNodeTypes> = {
-  [K in T['emphasis_mark']]: true;
+export type ItalicNode = {
+  [K in typeof NodeTypes['emphasis_mark']]: true;
 } & {
   children: TextNode;
 };
 
-export type MarkNode<T extends InputNodeTypes> =
-  | SuperscriptNode<T>
-  | SubscriptNode<T>
-  | UnderlineNode<T>;
+export type MarkNode =
+  | SuperscriptNode
+  | SubscriptNode
+  | UnderlineNode
+  | BoldNode
+  | StrikeThoughNode
+  | InlineCodeNode;
 
-export type SuperscriptNode<T extends InputNodeTypes> = {
-  [K in T['superscript_mark']]: true;
+export type SuperscriptNode = {
+  [K in typeof NodeTypes['superscript_mark']]: true;
 } & {
   children: TextNode;
 };
 
-export type SubscriptNode<T extends InputNodeTypes> = {
-  [K in T['subscript_mark']]: true;
+export type SubscriptNode = {
+  [K in typeof NodeTypes['subscript_mark']]: true;
 } & {
   children: TextNode;
 };
 
-export type UnderlineNode<T extends InputNodeTypes> = {
-  [K in T['underline_mark']]: true;
+export type UnderlineNode = {
+  [K in typeof NodeTypes['underline_mark']]: true;
 } & {
   children: TextNode;
 };
@@ -261,19 +254,17 @@ export type InlineCodeNode = {
   text: string | undefined;
 };
 
-export type DeserializedNode<T extends InputNodeTypes> =
-  | CodeBlockNode<T>
-  | HeadingNode<T>
-  | ListNode<T>
-  | ListItemNode<T>
-  | ParagraphNode<T>
-  | LinkNode<T>
-  | ImageNode<T>
-  | BlockQuoteNode<T>
-  | InlineCodeMarkNode<T>
-  | ThematicBreakNode<T>
-  | ItalicNode<T>
-  | BoldNode
-  | StrikeThoughNode
-  | InlineCodeNode
-  | TextNode;
+export type DeserializedNode =
+  | CodeBlockNode
+  | HeadingNode
+  | ListNode
+  | ListItemNode
+  | ParagraphNode
+  | LinkNode
+  | ImageNode
+  | BlockQuoteNode
+  | InlineCodeMarkNode
+  | ThematicBreakNode
+  | ItalicNode
+  | TextNode
+  | MarkNode;

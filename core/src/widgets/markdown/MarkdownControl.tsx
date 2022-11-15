@@ -68,7 +68,7 @@ const MarkdownControl = ({
     (slateValue: MdValue) => {
       const newValue = slateValue
         .map(v => {
-          const response = serialize(v as BlockType | LeafType)?.replace(/<br[ ]*[/]{0,1}>/g, '\n');
+          const response = serialize(v as BlockType | LeafType);
           console.log('[Plate] slate node to markdown', v.type, v, response);
           return response;
         })

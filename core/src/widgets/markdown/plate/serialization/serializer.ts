@@ -5,6 +5,7 @@ import escapeHtml from 'escape-html';
 import { NodeTypes } from './slate/ast-types';
 
 import type { BlockType, LeafType } from 'remark-slate';
+import type { TableNode } from './slate/ast-types';
 
 interface FontStyles {
   color?: string;
@@ -22,6 +23,8 @@ interface MdBlockType extends Omit<BlockType, 'children'> {
 }
 
 interface Options {
+  isInTable?: boolean;
+  isInCode?: boolean;
   listDepth?: number;
   ignoreParagraphNewline?: boolean;
 }
@@ -32,24 +35,37 @@ const isLeafNode = (node: MdBlockType | MdLeafType): node is MdLeafType => {
 
 const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image', 'code_line'];
 
-const BREAK_TAG = '<br>';
+const BREAK_TAG = '<br />';
+
+const CODE_ELEMENTS = [NodeTypes.code_line, NodeTypes.code_block];
+const LIST_TYPES = [NodeTypes.ul_list, NodeTypes.ol_list];
 
 export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options = {}) {
-  const { ignoreParagraphNewline = false, listDepth = 0 } = opts;
+  const {
+    ignoreParagraphNewline = false,
+    listDepth = 0,
+    isInTable = false,
+    isInCode = false,
+  } = opts;
 
   const text = (chunk as MdLeafType).text || '';
   let type = (chunk as MdBlockType).type || '';
-
-  const LIST_TYPES = [NodeTypes.ul_list, NodeTypes.ol_list];
 
   let children = text;
 
   console.log('Processing', chunk);
   if (!isLeafNode(chunk)) {
+    let separator = '';
+    if (type === NodeTypes.tableRow) {
+      separator = '|';
+    }
+
     children = chunk.children
       .map((c: MdBlockType | MdLeafType) => {
+        const selfIsTable = type === NodeTypes.table;
         const isList = !isLeafNode(c) ? (LIST_TYPES as string[]).includes(c.type || '') : false;
         const selfIsList = (LIST_TYPES as string[]).includes(chunk.type || '');
+        const selfIsCode = (CODE_ELEMENTS as string[]).includes(chunk.type || '');
 
         // Links can have the following shape
         // In which case we don't want to surround
@@ -87,10 +103,14 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
             listDepth: (LIST_TYPES as string[]).includes((c as MdBlockType).type || '')
               ? listDepth + 1
               : listDepth,
+
+            isInTable: selfIsTable || isInTable,
+
+            isInCode: selfIsCode || isInCode,
           },
         );
       })
-      .join('');
+      .join(separator);
   }
 
   // This is pretty fragile code, check the long comment where we iterate over children
@@ -101,7 +121,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
     type !== NodeTypes.image
   ) {
     type = NodeTypes.paragraph;
-    children = BREAK_TAG;
+    children = '\n';
   }
 
   if (children === '' && !VOID_ELEMENTS.find(k => NodeTypes[k] === type)) {
@@ -116,8 +136,8 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
   // we try applying formatting like to a node like this:
   // "Text foo bar **baz**" resulting in "**Text foo bar **baz****"
   // which is invalid markup and can mess everything up
-  if (children !== BREAK_TAG && isLeafNode(chunk)) {
-    children = escapeHtml(children);
+  if (children !== '\n' && isLeafNode(chunk)) {
+    children = isInCode || chunk.code ? children : escapeHtml(children);
     if (chunk.strikeThrough && chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '~~***');
     } else if (chunk.bold && chunk.italic) {
@@ -234,7 +254,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       return `${spacer}${isOL ? '1.' : '-'} ${children}${treatAsLeaf ? '\n' : ''}`;
 
     case NodeTypes.paragraph:
-      return `${children}\n`;
+      return `${children}${!isInTable ? '\n' : ''}`;
 
     case NodeTypes.thematic_break:
       return `---\n`;
@@ -244,6 +264,20 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
 
     case NodeTypes.code_line:
       return `${children}\n`;
+
+    case NodeTypes.table:
+      const columns = getTableColumnCount(chunk as TableNode);
+      console.log('TABLE SETUP', Array(columns).fill('---'));
+      return `|${Array(columns).fill('   ').join('|')}|
+|${Array(columns).fill('---').join('|')}|
+${children}\n`;
+
+    case NodeTypes.tableRow:
+      return `|${children}|\n`;
+
+    case NodeTypes.tableCell:
+      console.log('TABLE_CELL', children, children.replace(/\|/g, '\\|').replace(/\n/g, BREAK_TAG));
+      return children.replace(/\|/g, '\\|').replace(/\n/g, BREAK_TAG);
 
     default:
       console.warn('Unrecognized slate node, proceeding as text', `"${type}"`, chunk);
@@ -281,4 +315,13 @@ function retainWhitespaceAndFormat(string: string, format: string, endFormat?: s
 
   // and replace the non-whitespace content of the string
   return string.replace(frozenString, formattedString);
+}
+
+function getTableColumnCount(tableNode: TableNode): number {
+  const rows = tableNode.children;
+  if (rows.length === 0) {
+    return 0;
+  }
+
+  return rows[0].children.length;
 }

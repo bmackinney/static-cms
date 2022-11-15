@@ -8,7 +8,6 @@ import type {
   DeserializedNode,
   HeadingNode,
   ImageNode,
-  InputNodeTypes,
   ItalicNode,
   LinkNode,
   ListItemNode,
@@ -43,28 +42,43 @@ function persistLeafFormats(
   }, {});
 }
 
-function mdxToMark<T extends InputNodeTypes>(
-  mark: keyof typeof MarkNodeTypes,
-  children: DeserializedNode<T>[],
-): MarkNode<T> {
+function mdxToMark(mark: keyof typeof MarkNodeTypes, children: DeserializedNode[]): MarkNode {
   return {
     [MarkNodeTypes[mark] as string]: true,
     ...forceLeafNode(children as Array<TextNode>),
     ...persistLeafFormats(children as Array<MdastNode>),
-  } as unknown as MarkNode<T>;
+  } as MarkNode;
 }
 
-export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
-  let children: Array<DeserializedNode<T>> = [{ text: '' }];
+function escapeTableText(text: string): string {
+  return text.replace(/|/g, '\\|');
+}
+
+interface Options {
+  isInTable?: boolean;
+}
+
+export default function deserialize(node: MdastNode, options?: Options) {
+  let children: Array<DeserializedNode> = [{ text: '' }];
+
+  const { isInTable = false } = options ?? {};
+
+  const selfIsTable = node.type === 'table';
 
   const nodeChildren = node.children;
   if (nodeChildren && Array.isArray(nodeChildren) && nodeChildren.length > 0) {
     console.log('[DESERIALIZE][MAPPING CHILDREN] type', node);
-    children = nodeChildren.flatMap((c: MdastNode) =>
-      deserialize({
-        ...c,
-        ordered: node.ordered || false,
-      }),
+    children = nodeChildren.flatMap(
+      (c: MdastNode) =>
+        deserialize(
+          {
+            ...c,
+            ordered: node.ordered || false,
+          },
+          {
+            isInTable: selfIsTable || isInTable,
+          },
+        ) as DeserializedNode,
     );
   }
 
@@ -75,34 +89,34 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
       return {
         type: NodeTypes.heading[node.depth || 1],
         children,
-      } as HeadingNode<T>;
+      } as HeadingNode;
     case 'list':
       return {
         type: node.ordered ? NodeTypes.ol_list : NodeTypes.ul_list,
         children,
-      } as ListNode<T>;
+      } as ListNode;
     case 'listItem':
-      return { type: NodeTypes.listItem, children } as ListItemNode<T>;
+      return { type: NodeTypes.listItem, children } as ListItemNode;
     case 'paragraph':
       if ('ordered' in node) {
         return children;
       }
-      return { type: NodeTypes.paragraph, children } as ParagraphNode<T>;
+      return { type: NodeTypes.paragraph, children } as ParagraphNode;
     case 'link':
       return {
         type: NodeTypes.link,
         url: node.url,
         children,
-      } as LinkNode<T>;
+      } as LinkNode;
     case 'image':
       return {
         type: NodeTypes.image,
         children: [{ text: '' }],
         url: node.url,
         caption: [{ text: node.alt ?? '' }],
-      } as ImageNode<T>;
+      } as ImageNode;
     case 'blockquote':
-      return { type: NodeTypes.block_quote, children } as BlockQuoteNode<T>;
+      return { type: NodeTypes.block_quote, children } as BlockQuoteNode;
     case 'code':
       return {
         type: NodeTypes.code_block,
@@ -111,7 +125,7 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
           type: NodeTypes.code_line,
           children: [{ text: line }],
         })),
-      } as CodeBlockNode<T>;
+      } as CodeBlockNode;
 
     case 'html':
       if (node.value?.includes('<br>')) {
@@ -119,7 +133,7 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
           break: true,
           type: NodeTypes.paragraph,
           children: [{ text: node.value?.replace(/<br>/g, '') || '' }],
-        } as ParagraphNode<T>;
+        } as ParagraphNode;
       }
       return { type: 'p', children: [{ text: node.value || '' }] };
 
@@ -128,7 +142,7 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
         [NodeTypes.emphasis_mark]: true,
         ...forceLeafNode(children as Array<TextNode>),
         ...persistLeafFormats(children as Array<MdastNode>),
-      } as unknown as ItalicNode<T>;
+      } as unknown as ItalicNode;
     case 'strong':
       return {
         [NodeTypes.strong_mark]: true,
@@ -151,11 +165,22 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
       return {
         type: NodeTypes.thematic_break,
         children: [{ text: '' }],
-      } as ThematicBreakNode<T>;
+      } as ThematicBreakNode;
+
+    case 'table':
+      return { type: NodeTypes.table, children };
+
+    case 'tableRow':
+      return { type: NodeTypes.tableRow, children };
+
+    case 'tableCell':
+      return { type: NodeTypes.tableCell, children };
 
     case 'mdxJsxTextElement':
       if ('name' in node) {
         switch (node.name) {
+          case 'br':
+            return [{ text: '\n' }];
           case 'sub':
             return mdxToMark('subscript_mark', children);
           case 'sup':
@@ -200,7 +225,6 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
               ...forceLeafNode(children as Array<TextNode>),
               ...persistLeafFormats(children as Array<MdastNode>),
             } as TextNode;
-            break;
           default:
             console.warn('unrecognized mdx node', node);
             break;
@@ -210,7 +234,6 @@ export default function deserialize<T extends InputNodeTypes>(node: MdastNode) {
       return { text: node.value || '' };
 
     case 'text':
-    case 'tableCell':
       return { text: node.value || '' };
     default:
       console.warn('Unrecognized mdast node, proceeding as text', node);
