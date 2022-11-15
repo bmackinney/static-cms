@@ -20,7 +20,6 @@ import {
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
-  createTablePlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
   ELEMENT_PARAGRAPH,
@@ -32,6 +31,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import MarkBalloonToolbar from './components/balloon-toolbar/MarkBalloonToolbar';
+import { TableCellElement, TableElement, TableRowElement } from './components/table';
 import { Toolbar } from './components/toolbar/Toolbar';
 import { ToolbarButtons } from './components/ToolbarButtons';
 import { editableProps } from './editableProps';
@@ -43,6 +43,13 @@ import { linkPlugin } from './plugins/link/linkPlugin';
 import Paragraph from './plugins/paragraph/Paragraph';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
+import {
+  createTablePlugin,
+  ELEMENT_TABLE,
+  ELEMENT_TD,
+  ELEMENT_TH,
+  ELEMENT_TR,
+} from './plugins/table';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
 
 import type { AutoformatPlugin } from '@udecode/plate';
@@ -56,6 +63,10 @@ const StyledPlateEditor = styled('div')`
 
 const components = createPlateUI({
   [ELEMENT_PARAGRAPH]: Paragraph,
+  [ELEMENT_TABLE]: TableElement,
+  [ELEMENT_TR]: TableRowElement,
+  [ELEMENT_TH]: TableCellElement,
+  [ELEMENT_TD]: TableCellElement,
 });
 
 const styles: Record<string, CSSProperties> = {
