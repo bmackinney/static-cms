@@ -1,20 +1,16 @@
 import React from 'react';
-import {
-  CodeBlockInsertOptions,
-  ELEMENT_CODE_BLOCK,
-  insertEmptyCodeBlock,
-} from '@udecode/plate-code-block';
+import { ELEMENT_CODE_BLOCK, insertEmptyCodeBlock } from '@udecode/plate-code-block';
 import {
   getPluginType,
   getPreventDefaultHandler,
   useEventPlateId,
   usePlateEditorState,
-  Value,
 } from '@udecode/plate-core';
-import {
-  BlockToolbarButton,
-  ToolbarButtonProps,
-} from '@udecode/plate-ui-toolbar';
+import { BlockToolbarButton } from '@udecode/plate-ui-toolbar';
+
+import type { CodeBlockInsertOptions } from '@udecode/plate-code-block';
+import type { Value } from '@udecode/plate-core';
+import type { ToolbarButtonProps } from '@udecode/plate-ui-toolbar';
 
 export const CodeBlockToolbarButton = <V extends Value>({
   id,

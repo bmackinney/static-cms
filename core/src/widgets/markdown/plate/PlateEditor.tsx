@@ -23,6 +23,12 @@ import {
   createTrailingBlockPlugin,
   createUnderlinePlugin,
   ELEMENT_CODE_BLOCK,
+  ELEMENT_H1,
+  ELEMENT_H2,
+  ELEMENT_H3,
+  ELEMENT_H4,
+  ELEMENT_H5,
+  ELEMENT_H6,
   ELEMENT_PARAGRAPH,
   Plate,
   PlateProvider,
@@ -32,8 +38,14 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import MarkBalloonToolbar from './components/balloon-toolbar/MarkBalloonToolbar';
-import { CodeBlockElement } from './components/code-block';
-import { TableCellElement, TableElement, TableRowElement } from './components/table';
+import { CodeBlockElement } from './components/nodes/code-block';
+import { Heading1 } from './components/nodes/headings/Heading1';
+import { Heading2 } from './components/nodes/headings/Heading2';
+import { Heading3 } from './components/nodes/headings/Heading3';
+import { Heading4 } from './components/nodes/headings/Heading4';
+import { Heading5 } from './components/nodes/headings/Heading5';
+import { Heading6 } from './components/nodes/headings/Heading6';
+import { TableCellElement, TableElement, TableRowElement } from './components/nodes/table';
 import { Toolbar } from './components/toolbar/Toolbar';
 import { ToolbarButtons } from './components/ToolbarButtons';
 import { editableProps } from './editableProps';
@@ -64,6 +76,12 @@ const StyledPlateEditor = styled('div')`
 `;
 
 const components = createPlateUI({
+  [ELEMENT_H1]: Heading1,
+  [ELEMENT_H2]: Heading2,
+  [ELEMENT_H3]: Heading3,
+  [ELEMENT_H4]: Heading4,
+  [ELEMENT_H5]: Heading5,
+  [ELEMENT_H6]: Heading6,
   [ELEMENT_PARAGRAPH]: Paragraph,
   [ELEMENT_TABLE]: TableElement,
   [ELEMENT_TR]: TableRowElement,

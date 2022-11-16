@@ -4,7 +4,7 @@ import { useSelectedCells } from '../hooks/useSelectedCells';
 import { useTableStore } from '../table.atoms';
 
 import type { PlateRenderElementProps } from '@udecode/plate';
-import type { MdValue } from '../../../plateTypes';
+import type { MdValue } from '../../../../plateTypes';
 
 export const TableElement = ({ ...props }: PlateRenderElementProps<MdValue>) => {
   const { attributes, children, nodeProps, element } = props;
