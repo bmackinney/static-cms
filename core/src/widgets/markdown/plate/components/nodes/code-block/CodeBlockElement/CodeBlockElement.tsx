@@ -95,12 +95,12 @@ export const CodeBlockElement = (props: PlateRenderElementProps<MdValue>) => {
     [],
   );
 
-  const [height, setHeight] = useState(0);
+  const [height, setHeight] = useState(24);
   const iframeRef = useRef<Frame & HTMLIFrameElement>();
 
   const handleResize = useCallback(
     (iframe: MutableRefObject<(Frame & HTMLIFrameElement) | undefined>) => {
-      const height = iframe.current?.contentDocument?.body.scrollHeight ?? 0;
+      const height = iframe.current?.contentDocument?.body?.scrollHeight ?? 0;
       if (height !== 0) {
         setHeight(height);
       }
@@ -110,7 +110,7 @@ export const CodeBlockElement = (props: PlateRenderElementProps<MdValue>) => {
 
   useEffect(() => handleResize(iframeRef), [handleResize, iframeRef, code]);
   useEffect(() => {
-    setTimeout(() => handleResize(iframeRef), 200);
+    setTimeout(() => handleResize(iframeRef), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -12,9 +12,7 @@ import {
   createItalicPlugin,
   createLinkPlugin,
   createListPlugin,
-  createParagraphPlugin,
-  createPlateUI,
-  createResetNodePlugin,
+  createParagraphPlugin, createResetNodePlugin,
   createSoftBreakPlugin,
   createStrikethroughPlugin,
   createSubscriptPlugin,
@@ -28,9 +26,12 @@ import {
   ELEMENT_H4,
   ELEMENT_H5,
   ELEMENT_H6,
+  ELEMENT_IMAGE,
+  ELEMENT_LINK,
   ELEMENT_PARAGRAPH,
+  LinkElement,
   Plate,
-  PlateProvider,
+  PlateProvider
 } from '@udecode/plate';
 import React, { useMemo, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -44,6 +45,7 @@ import { Heading3 } from './components/nodes/headings/Heading3';
 import { Heading4 } from './components/nodes/headings/Heading4';
 import { Heading5 } from './components/nodes/headings/Heading5';
 import { Heading6 } from './components/nodes/headings/Heading6';
+import { ImageElement } from './components/nodes/image/ImageElement';
 import { TableCellElement, TableElement, TableRowElement } from './components/nodes/table';
 import { Toolbar } from './components/toolbar/Toolbar';
 import { ToolbarButtons } from './components/ToolbarButtons';
@@ -62,7 +64,7 @@ import {
   ELEMENT_TABLE,
   ELEMENT_TD,
   ELEMENT_TH,
-  ELEMENT_TR,
+  ELEMENT_TR
 } from './plugins/table';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
 
@@ -75,7 +77,7 @@ const StyledPlateEditor = styled('div')`
   padding: 1.25rem;
 `;
 
-const components = createPlateUI({
+const components = {
   [ELEMENT_H1]: Heading1,
   [ELEMENT_H2]: Heading2,
   [ELEMENT_H3]: Heading3,
@@ -88,7 +90,9 @@ const components = createPlateUI({
   [ELEMENT_TH]: TableCellElement,
   [ELEMENT_TD]: TableCellElement,
   [ELEMENT_CODE_BLOCK]: CodeBlockElement,
-});
+  [ELEMENT_LINK]: LinkElement,
+  [ELEMENT_IMAGE]: ImageElement,
+};
 
 const styles: Record<string, CSSProperties> = {
   container: { position: 'relative' },
