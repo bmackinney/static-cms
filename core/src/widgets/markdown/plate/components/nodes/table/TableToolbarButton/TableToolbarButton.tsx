@@ -11,7 +11,7 @@ import React from 'react';
 
 import type { PlateEditor } from '@udecode/plate-core';
 import type { ToolbarButtonProps } from '@udecode/plate-ui-toolbar';
-import type { MdValue } from '../../../plateTypes';
+import type { MdValue } from '../../../../plateTypes';
 
 export interface TableToolbarButtonProps extends ToolbarButtonProps {
   header?: boolean;
