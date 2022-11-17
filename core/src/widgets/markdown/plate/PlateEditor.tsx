@@ -12,13 +12,15 @@ import {
   createItalicPlugin,
   createLinkPlugin,
   createListPlugin,
-  createParagraphPlugin, createResetNodePlugin,
+  createParagraphPlugin,
+  createResetNodePlugin,
   createSoftBreakPlugin,
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
+  ELEMENT_BLOCKQUOTE,
   ELEMENT_CODE_BLOCK,
   ELEMENT_H1,
   ELEMENT_H2,
@@ -27,17 +29,21 @@ import {
   ELEMENT_H5,
   ELEMENT_H6,
   ELEMENT_IMAGE,
+  ELEMENT_LI,
   ELEMENT_LINK,
+  ELEMENT_OL,
   ELEMENT_PARAGRAPH,
+  ELEMENT_UL,
   LinkElement,
   Plate,
-  PlateProvider
+  PlateProvider,
 } from '@udecode/plate';
 import React, { useMemo, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import MarkBalloonToolbar from './components/balloon-toolbar/MarkBalloonToolbar';
+import BlockquoteElement from './components/nodes/blockquote/BlockquoteElement';
 import { CodeBlockElement } from './components/nodes/code-block';
 import { Heading1 } from './components/nodes/headings/Heading1';
 import { Heading2 } from './components/nodes/headings/Heading2';
@@ -46,6 +52,10 @@ import { Heading4 } from './components/nodes/headings/Heading4';
 import { Heading5 } from './components/nodes/headings/Heading5';
 import { Heading6 } from './components/nodes/headings/Heading6';
 import { ImageElement } from './components/nodes/image/ImageElement';
+import ListItemElement from './components/nodes/list/ListItemElement';
+import OrderedListElement from './components/nodes/list/OrderedListElement';
+import UnorderedListElement from './components/nodes/list/UnorderedListElement';
+import Paragraph from './components/nodes/paragraph/Paragraph';
 import { TableCellElement, TableElement, TableRowElement } from './components/nodes/table';
 import { Toolbar } from './components/toolbar/Toolbar';
 import { ToolbarButtons } from './components/ToolbarButtons';
@@ -56,7 +66,6 @@ import { createCodeBlockPlugin } from './plugins/code-block/createCodeBlockPlugi
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
 import { linkPlugin } from './plugins/link/linkPlugin';
-import Paragraph from './plugins/paragraph/Paragraph';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
 import {
@@ -64,7 +73,7 @@ import {
   ELEMENT_TABLE,
   ELEMENT_TD,
   ELEMENT_TH,
-  ELEMENT_TR
+  ELEMENT_TR,
 } from './plugins/table';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
 
@@ -89,9 +98,13 @@ const components = {
   [ELEMENT_TR]: TableRowElement,
   [ELEMENT_TH]: TableCellElement,
   [ELEMENT_TD]: TableCellElement,
+  [ELEMENT_BLOCKQUOTE]: BlockquoteElement,
   [ELEMENT_CODE_BLOCK]: CodeBlockElement,
   [ELEMENT_LINK]: LinkElement,
   [ELEMENT_IMAGE]: ImageElement,
+  [ELEMENT_OL]: OrderedListElement,
+  [ELEMENT_UL]: UnorderedListElement,
+  [ELEMENT_LI]: ListItemElement,
 };
 
 const styles: Record<string, CSSProperties> = {
