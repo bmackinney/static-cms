@@ -478,7 +478,9 @@ const PreviewPane = (props: TranslatedProps<EditorPreviewPaneProps>) => {
     () => `
       <!DOCTYPE html>
       <html>
-        <head><base target="_blank"/></head>
+        <head>
+          <base target="_blank"/>
+        </head>
         <body><div></div></body>
       </html>
     `,

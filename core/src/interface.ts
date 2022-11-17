@@ -1,8 +1,4 @@
-import type {
-  EditorPlugin as MarkdownPlugin,
-  EditorType as MarkdownEditorType,
-} from '@toast-ui/editor/types/editor';
-import type { ToolbarItemOptions as MarkdownToolbarItemOptions } from '@toast-ui/editor/types/ui';
+import type { LanguageName } from '@uiw/codemirror-extensions-langs';
 import type { PropertiesSchema } from 'ajv/dist/types/json-schema';
 import type { ComponentType, FunctionComponent, ReactNode } from 'react';
 import type { t, TranslateProps as ReactPolyglotTranslateProps } from 'react-polyglot';
@@ -841,7 +837,7 @@ export interface I18nInfo {
 export interface ProcessedCodeLanguage {
   label: string;
   identifiers: string[];
-  codemirror_mode: string;
+  codemirror_mode: LanguageName;
   codemirror_mime_type: string;
 }
 
@@ -866,18 +862,18 @@ export interface MarkdownPluginFactoryProps {
   mode: 'editor' | 'preview';
 }
 
-export type MarkdownPluginFactory = (props: MarkdownPluginFactoryProps) => MarkdownPlugin;
+export type MarkdownPluginFactory = (props: MarkdownPluginFactoryProps) => any;
 
 export interface MarkdownToolbarItemsFactoryProps {
-  imageToolbarButton: MarkdownToolbarItemOptions;
+  imageToolbarButton: any;
 }
 
 export type MarkdownToolbarItemsFactory = (
   props: MarkdownToolbarItemsFactoryProps,
-) => (string | MarkdownToolbarItemOptions)[][];
+) => (string | any)[][];
 
 export interface MarkdownEditorOptions {
-  initialEditType?: MarkdownEditorType;
+  initialEditType?: any;
   height?: string;
   toolbarItems?: MarkdownToolbarItemsFactory;
   plugins?: MarkdownPluginFactory[];
