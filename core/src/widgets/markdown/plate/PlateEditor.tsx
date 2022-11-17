@@ -3,7 +3,6 @@ import {
   createAutoformatPlugin,
   createBlockquotePlugin,
   createBoldPlugin,
-  createCodeBlockPlugin,
   createCodePlugin,
   createExitBreakPlugin,
   createFontBackgroundColorPlugin,
@@ -39,6 +38,7 @@ import { ToolbarButtons } from './components/ToolbarButtons';
 import { editableProps } from './editableProps';
 import { createMdPlugins } from './plateTypes';
 import { autoformatPlugin } from './plugins/autoformat/autoformatPlugin';
+import { createCodeBlockPlugin } from './plugins/code-block/createCodeBlockPlugin';
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
 import { linkPlugin } from './plugins/link/linkPlugin';

@@ -121,10 +121,8 @@ export default function deserialize(node: MdastNode, options?: Options) {
       return {
         type: NodeTypes.code_block,
         lang: node.lang,
-        children: (node.value ?? '').split('\n').map(line => ({
-          type: NodeTypes.code_line,
-          children: [{ text: line }],
-        })),
+        code: node.value,
+        children: [{ text: '' }],
       } as CodeBlockNode;
 
     case 'html':

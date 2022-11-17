@@ -133,7 +133,7 @@ export type CodeLineNode = {
 export type CodeBlockNode = {
   type: typeof NodeTypes['code_block'];
   lang: string | undefined;
-  children: Array<CodeLineNode>;
+  code: string;
 };
 
 export type HeadingNode = {

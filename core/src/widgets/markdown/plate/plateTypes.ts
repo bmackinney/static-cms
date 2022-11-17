@@ -203,7 +203,8 @@ export interface MdBlockquoteElement extends MdBlockElement {
 
 export interface MdCodeBlockElement extends MdBlockElement {
   type: typeof ELEMENT_CODE_BLOCK;
-  children: MdCodeLineElement[];
+  lang: string | undefined;
+  code: string;
 }
 
 export interface MdCodeLineElement extends TElement {

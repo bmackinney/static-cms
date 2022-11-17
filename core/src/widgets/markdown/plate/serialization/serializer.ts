@@ -6,6 +6,7 @@ import { NodeTypes } from './slate/ast-types';
 
 import type { BlockType, LeafType } from 'remark-slate';
 import type { TableNode } from './slate/ast-types';
+import type { MdCodeBlockElement, MdImageElement, MdLinkElement } from '../plateTypes';
 
 interface FontStyles {
   color?: string;
@@ -33,7 +34,7 @@ const isLeafNode = (node: MdBlockType | MdLeafType): node is MdLeafType => {
   return typeof (node as MdLeafType).text === 'string';
 };
 
-const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image', 'code_line'];
+const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image', 'code_block'];
 
 const BREAK_TAG = '<br />';
 
@@ -220,16 +221,18 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       return `> ${children}\n\n`;
 
     case NodeTypes.code_block:
-      return `\`\`\`${(chunk as MdBlockType).lang || ''}\n${children}\n\`\`\`\n`;
+      const codeBlock = chunk as MdCodeBlockElement;
+      console.log('CODE_BLOCK!', chunk);
+      return `\`\`\`${codeBlock.lang ?? ''}\n${codeBlock.code}\n\`\`\`\n`;
 
     case NodeTypes.link:
-      return `[${children}](${(chunk as MdBlockType).url || ''})`;
+      const linkBlock = chunk as MdLinkElement;
+      return `[${children}](${linkBlock.url || ''})`;
+
     case NodeTypes.image:
-      console.log('IMAGE', chunk);
-      const caption = (chunk as MdBlockType).caption ?? [];
-      return `![${caption.length > 0 ? caption[0].text ?? '' : ''}](${
-        (chunk as MdBlockType).url || ''
-      })`;
+      const imageBlock = chunk as MdImageElement;
+      const caption = imageBlock.caption ?? [];
+      return `![${caption.length > 0 ? caption[0].text ?? '' : ''}](${imageBlock.url || ''})`;
 
     case NodeTypes.ul_list:
     case NodeTypes.ol_list:
