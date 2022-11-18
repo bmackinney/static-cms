@@ -9,7 +9,8 @@ import type {
   MdCodeBlockElement,
   MdImageElement,
   MdLinkElement,
-  MdListItemElement, MdTodoListItemElement
+  MdListItemElement,
+  MdTodoListItemElement,
 } from '../plateTypes';
 import type { TableNode } from './slate/ast-types';
 
@@ -248,9 +249,18 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       const listItemBlock = chunk as MdListItemElement | MdTodoListItemElement;
 
       const isOL = chunk && chunk.parentType === NodeTypes.ol_list;
+
       const treatAsLeaf =
         (chunk as MdBlockType).children.length >= 1 &&
         (chunk as MdBlockType).children.reduce((acc, child) => acc && isLeafNode(child), true);
+
+      console.log(
+        'LIST_ITEM',
+        chunk,
+        treatAsLeaf,
+        (chunk as MdBlockType).children.length >= 1,
+        (chunk as MdBlockType).children.map(child => ({ child, isLeafeNode: isLeafNode(child) })),
+      );
 
       let spacer = '';
       for (let k = 0; listDepth > k; k++) {
