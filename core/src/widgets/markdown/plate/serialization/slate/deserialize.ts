@@ -50,10 +50,6 @@ function mdxToMark(mark: keyof typeof MarkNodeTypes, children: DeserializedNode[
   } as MarkNode;
 }
 
-function escapeTableText(text: string): string {
-  return text.replace(/|/g, '\\|');
-}
-
 interface Options {
   isInTable?: boolean;
 }
@@ -73,7 +69,7 @@ export default function deserialize(node: MdastNode, options?: Options) {
         deserialize(
           {
             ...c,
-            ordered: node.ordered || false,
+            ordered: node.ordered || c.ordered || false,
           },
           {
             isInTable: selfIsTable || isInTable,

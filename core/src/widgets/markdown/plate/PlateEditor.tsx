@@ -18,6 +18,7 @@ import {
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
+  createTodoListPlugin,
   createTrailingBlockPlugin,
   createUnderlinePlugin,
   ELEMENT_BLOCKQUOTE,
@@ -105,6 +106,7 @@ const components = {
   [ELEMENT_OL]: OrderedListElement,
   [ELEMENT_UL]: UnorderedListElement,
   [ELEMENT_LI]: ListItemElement,
+  ELEMENT_TODO_LI
 };
 
 const styles: Record<string, CSSProperties> = {
@@ -125,7 +127,7 @@ const PlateEditor = ({ initialValue, onChange }: PlateEditorProps) => {
         [
           createParagraphPlugin(),
           createBlockquotePlugin(),
-          // createTodoListPlugin(),
+          createTodoListPlugin(),
           createHeadingPlugin(),
           createImagePlugin(),
           // createHorizontalRulePlugin(),
