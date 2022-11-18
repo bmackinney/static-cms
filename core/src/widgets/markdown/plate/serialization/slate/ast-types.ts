@@ -15,7 +15,6 @@ import {
   ELEMENT_PARAGRAPH,
   ELEMENT_TABLE,
   ELEMENT_TD,
-  ELEMENT_TODO_LI,
   ELEMENT_TR,
   ELEMENT_UL,
 } from '@udecode/plate';
@@ -34,8 +33,7 @@ export const NodeTypes = {
   ul_list: ELEMENT_UL,
   ol_list: ELEMENT_OL,
   listItem: ELEMENT_LI,
-  listToDoItem: ELEMENT_TODO_LI,
-  listItemChild: ELEMENT_LIC,
+  listItemContent: ELEMENT_LIC,
   table: ELEMENT_TABLE,
   tableRow: ELEMENT_TR,
   tableCell: ELEMENT_TD,
@@ -168,19 +166,14 @@ export type ListNode = {
   children: Array<DeserializedNode>;
 };
 
-export type ListToDoItemNode = {
-  type: typeof NodeTypes['listToDoItem'];
+export type ListItemNode = {
+  type: typeof NodeTypes['listItem'];
   checked: boolean;
   children: Array<DeserializedNode>;
 };
 
-export type ListItemNode = {
-  type: typeof NodeTypes['listItem'];
-  children: Array<DeserializedNode>;
-};
-
-export type ListItemChildNode = {
-  type: typeof NodeTypes['listItemChild'];
+export type ListItemContentNode = {
+  type: typeof NodeTypes['listItemContent'];
   children: Array<DeserializedNode>;
 };
 
@@ -286,6 +279,7 @@ export type DeserializedNode =
   | HeadingNode
   | ListNode
   | ListItemNode
+  | ListItemContentNode
   | ParagraphNode
   | LinkNode
   | ImageNode

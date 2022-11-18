@@ -74,7 +74,6 @@ const MarkdownControl = ({
         })
         .join('\n');
       console.log('[Plate] slateValue', slateValue, 'newMarkdownValue', newValue);
-      // const newValue = editorRef.current?.getInstance().getMarkdown() ?? '';
       if (newValue !== internalValue) {
         setInternalValue(newValue);
         onChange(newValue);

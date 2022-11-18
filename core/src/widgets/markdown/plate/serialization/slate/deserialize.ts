@@ -11,15 +11,13 @@ import type {
   ItalicNode,
   LinkNode,
   ListItemNode,
-  ListNode,
-  ListToDoItemNode,
-  MarkNode,
+  ListNode, MarkNode,
   MdastNode,
   ParagraphNode,
   StyleMdxMdastNodeAttribute,
   TextNode,
   TextNodeStyles,
-  ThematicBreakNode,
+  ThematicBreakNode
 } from './ast-types';
 
 const forceLeafNode = (children: Array<TextNode>) => ({
@@ -95,21 +93,34 @@ export default function deserialize(node: MdastNode, options?: Options) {
       } as ListNode;
 
     case 'listItem':
-      if ('checked' in node && typeof node.checked === 'boolean') {
-        return {
-          type: NodeTypes.listToDoItem,
-          checked: node.checked,
-          children: children.map(child =>
-            'type' in child && LIST_TYPES.includes(child.type)
-              ? child
-              : {
-                  type: NodeTypes.listItemChild,
-                  children,
-                },
-          ),
-        } as ListToDoItemNode;
+      const [content, childList] = children.reduce(
+        ([accContent, accChildList], child) => {
+          if ('type' in child && LIST_TYPES.includes(child.type)) {
+            return [accContent, child];
+          }
+
+          accContent.push(child);
+          return [accContent, accChildList];
+        },
+        [[], null] as [DeserializedNode[], DeserializedNode | null],
+      );
+
+      const listItemChildren: DeserializedNode[] = [
+        {
+          type: NodeTypes.listItemContent,
+          children: content,
+        },
+      ];
+
+      if (childList) {
+        listItemChildren.push(childList);
       }
-      return { type: NodeTypes.listItem, children } as ListItemNode;
+
+      return {
+        type: NodeTypes.listItem,
+        checked: node.checked,
+        children: listItemChildren,
+      } as ListItemNode;
 
     case 'paragraph':
       if ('ordered' in node) {

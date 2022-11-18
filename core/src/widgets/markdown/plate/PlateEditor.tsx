@@ -11,7 +11,6 @@ import {
   createImagePlugin,
   createItalicPlugin,
   createLinkPlugin,
-  createListPlugin,
   createParagraphPlugin,
   createResetNodePlugin,
   createSoftBreakPlugin,
@@ -31,11 +30,17 @@ import {
   ELEMENT_H6,
   ELEMENT_IMAGE,
   ELEMENT_LI,
+  ELEMENT_LIC,
   ELEMENT_LINK,
   ELEMENT_OL,
-  ELEMENT_PARAGRAPH, ELEMENT_TABLE,
+  ELEMENT_PARAGRAPH,
+  ELEMENT_TABLE,
   ELEMENT_TD,
-  ELEMENT_TH, ELEMENT_TODO_LI, ELEMENT_TR, ELEMENT_UL, LinkElement,
+  ELEMENT_TH,
+  ELEMENT_TODO_LI,
+  ELEMENT_TR,
+  ELEMENT_UL,
+  LinkElement,
   Plate,
   PlateProvider
 } from '@udecode/plate';
@@ -53,6 +58,7 @@ import { Heading4 } from './components/nodes/headings/Heading4';
 import { Heading5 } from './components/nodes/headings/Heading5';
 import { Heading6 } from './components/nodes/headings/Heading6';
 import { ImageElement } from './components/nodes/image/ImageElement';
+import ListItemContentElement from './components/nodes/list/ListItemContentElement';
 import ListItemElement from './components/nodes/list/ListItemElement';
 import ListToDoItemElement from './components/nodes/list/ListToDoItemElement';
 import OrderedListElement from './components/nodes/list/OrderedListElement';
@@ -68,6 +74,7 @@ import { createCodeBlockPlugin } from './plugins/code-block/createCodeBlockPlugi
 import { CursorOverlayContainer } from './plugins/cursor-overlay/CursorOverlayContainer';
 import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
 import { linkPlugin } from './plugins/link/linkPlugin';
+import { createListPlugin } from './plugins/list/createListPlugin';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
 import { createTablePlugin } from './plugins/table';
@@ -102,6 +109,7 @@ const components = {
   [ELEMENT_UL]: UnorderedListElement,
   [ELEMENT_LI]: ListItemElement,
   [ELEMENT_TODO_LI]: ListToDoItemElement,
+  [ELEMENT_LIC]: ListItemContentElement,
 };
 
 const styles: Record<string, CSSProperties> = {

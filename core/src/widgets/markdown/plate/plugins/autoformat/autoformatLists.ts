@@ -29,13 +29,21 @@ export const autoformatLists: MdAutoformatRule[] = [
   },
   {
     mode: 'block',
-    type: ELEMENT_TODO_LI,
-    match: '[] ',
+    type: ELEMENT_LI,
+    match: ['- [] ', '- [ ] ', '1. [] ', '1. [ ] '],
+    format: editor =>
+      setNodes<TTodoListItemElement>(
+        editor,
+        { type: ELEMENT_TODO_LI, checked: false },
+        {
+          match: n => isBlock(editor, n),
+        },
+      ),
   },
   {
     mode: 'block',
-    type: ELEMENT_TODO_LI,
-    match: '[x] ',
+    type: ELEMENT_LI,
+    match: ['- [x] ', '1. [x] '],
     format: editor =>
       setNodes<TTodoListItemElement>(
         editor,

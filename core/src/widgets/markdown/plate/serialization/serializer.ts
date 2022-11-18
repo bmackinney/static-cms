@@ -10,7 +10,6 @@ import type {
   MdImageElement,
   MdLinkElement,
   MdListItemElement,
-  MdTodoListItemElement,
 } from '../plateTypes';
 import type { TableNode } from './slate/ast-types';
 
@@ -33,6 +32,7 @@ interface Options {
   isInTable?: boolean;
   isInCode?: boolean;
   listDepth?: number;
+  blockquoteDepth?: number;
   ignoreParagraphNewline?: boolean;
 }
 
@@ -52,6 +52,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
     listDepth = 0,
     isInTable = false,
     isInCode = false,
+    blockquoteDepth = 0,
   } = opts;
 
   const text = (chunk as MdLeafType).text || '';
@@ -72,6 +73,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
         const isList = !isLeafNode(c) ? (LIST_TYPES as string[]).includes(c.type || '') : false;
         const selfIsList = (LIST_TYPES as string[]).includes(chunk.type || '');
         const selfIsCode = (CODE_ELEMENTS as string[]).includes(chunk.type || '');
+        const selfIsBlockquote = chunk.type === 'blockquote';
 
         // Links can have the following shape
         // In which case we don't want to surround
@@ -113,6 +115,8 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
             isInTable: selfIsTable || isInTable,
 
             isInCode: selfIsCode || isInCode,
+
+            blockquoteDepth: selfIsBlockquote ? blockquoteDepth + 1 : blockquoteDepth,
           },
         );
       })
@@ -223,7 +227,10 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       // For some reason, marked is parsing blockquotes w/ one new line
       // as contiued blockquotes, so adding two new lines ensures that doesn't
       // happen
-      return `> ${children}\n\n`;
+      return `> ${children
+        .replace(/^[\n]*|[\n]*$/gm, '')
+        .split('\n')
+        .join('\n> ')}\n\n`;
 
     case NodeTypes.code_block:
       const codeBlock = chunk as MdCodeBlockElement;
@@ -241,17 +248,20 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
 
     case NodeTypes.ul_list:
     case NodeTypes.ol_list:
-      return `\n${children}\n`;
+      return `\n${children}`;
+
+    case NodeTypes.listItemContent:
+      return children;
 
     case NodeTypes.listItem:
-    case NodeTypes.listToDoItem:
-      const listItemBlock = chunk as MdListItemElement | MdTodoListItemElement;
+      const listItemBlock = chunk as MdListItemElement;
 
       const isOL = chunk && chunk.parentType === NodeTypes.ol_list;
 
       const treatAsLeaf =
         (chunk as MdBlockType).children.length >= 1 &&
-        (chunk as MdBlockType).children.reduce((acc, child) => acc && isLeafNode(child), true);
+        ((chunk as MdBlockType).children.reduce((acc, child) => acc && isLeafNode(child), true) ||
+          ((chunk as MdBlockType).children[0] as BlockType).type === 'lic');
 
       console.log(
         'LIST_ITEM',
@@ -259,6 +269,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
         treatAsLeaf,
         (chunk as MdBlockType).children.length >= 1,
         (chunk as MdBlockType).children.map(child => ({ child, isLeafeNode: isLeafNode(child) })),
+        ((chunk as MdBlockType).children[0] as BlockType).type === 'lic',
       );
 
       let spacer = '';
@@ -272,7 +283,7 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       }
 
       let checkbox = '';
-      if ('checked' in listItemBlock && typeof listItemBlock.checked === 'boolean') {
+      if (typeof listItemBlock.checked === 'boolean') {
         checkbox = ` [${listItemBlock.checked ? 'X' : ' '}]`;
       }
 

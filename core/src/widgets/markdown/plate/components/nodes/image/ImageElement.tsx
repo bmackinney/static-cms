@@ -4,10 +4,10 @@ import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { findNodePath, setNodes } from '@udecode/plate';
-import { createComponentAs, createElementAs, useElement } from '@udecode/plate-core';
+import { createElementAs } from '@udecode/plate-core';
 import React, { useCallback, useState } from 'react';
 
-import type { PlateRenderElementProps, TCodeBlockElement } from '@udecode/plate';
+import type { PlateRenderElementProps } from '@udecode/plate';
 import type { TMediaElement } from '@udecode/plate-media';
 import type { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import type { MdValue } from '../../../plateTypes';
@@ -36,7 +36,7 @@ const StyledFloatingVerticalDivider = styled('div')`
 
 export const ImageElement = ({ element, editor }: PlateRenderElementProps<MdValue>) => {
   const { url, alt } = element;
-  console.log('IMAGE_COMPONENT')
+  console.log('IMAGE_COMPONENT');
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [editing, setEditing] = useState(false);
@@ -72,7 +72,7 @@ export const ImageElement = ({ element, editor }: PlateRenderElementProps<MdValu
     (event: ChangeEvent<HTMLInputElement>, key: string) => {
       const value = event.target.value;
       const path = findNodePath(editor, element);
-      path && setNodes<TCodeBlockElement>(editor, { [key]: value }, { at: path });
+      path && setNodes<TMediaElement>(editor, { [key]: value }, { at: path });
     },
     [editor, element],
   );

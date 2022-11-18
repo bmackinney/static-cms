@@ -43,7 +43,6 @@ import type {
   ELEMENT_PARAGRAPH,
   ELEMENT_TABLE,
   ELEMENT_TD,
-  ELEMENT_TODO_LI,
   ELEMENT_TR,
   ELEMENT_UL,
   EMarks,
@@ -76,7 +75,6 @@ import type {
   TReactEditor,
   TTableElement,
   TText,
-  TTodoListItemElement,
   WithOverride,
 } from '@udecode/plate';
 import type { CSSProperties } from 'styled-components';
@@ -239,12 +237,7 @@ export interface MdNumberedListElement extends TElement, MdBlockElement {
 
 export interface MdListItemElement extends TElement, MdBlockElement {
   type: typeof ELEMENT_LI;
-  children: MdInlineChildren;
-}
-
-export interface MdTodoListItemElement extends TTodoListItemElement, MdBlockElement {
-  type: typeof ELEMENT_TODO_LI;
-  checked: boolean;
+  checked: boolean | null;
   children: MdInlineChildren;
 }
 
@@ -281,7 +274,6 @@ export type MdRootBlock =
   | MdTableElement
   | MdBulletedListElement
   | MdNumberedListElement
-  | MdTodoListItemElement
   | MdImageElement
   | MdMediaEmbedElement
   | MdHrElement;
