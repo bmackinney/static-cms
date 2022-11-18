@@ -242,8 +242,9 @@ export interface MdListItemElement extends TElement, MdBlockElement {
   children: MdInlineChildren;
 }
 
-export interface MdTodoListElement extends TTodoListItemElement, MdBlockElement {
+export interface MdTodoListItemElement extends TTodoListItemElement, MdBlockElement {
   type: typeof ELEMENT_TODO_LI;
+  checked: boolean;
   children: MdInlineChildren;
 }
 
@@ -280,7 +281,7 @@ export type MdRootBlock =
   | MdTableElement
   | MdBulletedListElement
   | MdNumberedListElement
-  | MdTodoListElement
+  | MdTodoListItemElement
   | MdImageElement
   | MdMediaEmbedElement
   | MdHrElement;

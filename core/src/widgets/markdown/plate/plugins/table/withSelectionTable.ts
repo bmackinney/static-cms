@@ -1,14 +1,9 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import {
-  isRangeAcrossBlocks,
-  getPluginType,
-  getBlockAbove,
-  getStartPoint,
-  getPointBefore,
-  getEndPoint,
+  getBlockAbove, getEndPoint, getPluginType, getPointBefore, getStartPoint, isRangeAcrossBlocks
 } from '@udecode/plate-core';
 import { Range } from 'slate';
 
-import { ELEMENT_TABLE } from './createTablePlugin';
 import { overrideSelectionFromCell } from './transforms/overrideSelectionFromCell';
 
 import type { PlateEditor } from '@udecode/plate-core';

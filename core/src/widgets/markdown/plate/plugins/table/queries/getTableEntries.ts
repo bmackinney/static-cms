@@ -1,6 +1,6 @@
+import { ELEMENT_TABLE, ELEMENT_TR } from '@udecode/plate';
 import { findNode, getAboveNode, getPluginType } from '@udecode/plate-core';
 
-import { ELEMENT_TABLE, ELEMENT_TR } from '../createTablePlugin';
 import { getCellTypes } from '../utils/index';
 
 import type { PlateEditor } from '@udecode/plate-core';

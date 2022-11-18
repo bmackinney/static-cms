@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { allowedStyles, NodeTypes, MarkNodeTypes } from './ast-types';
+import { allowedStyles, MarkNodeTypes, NodeTypes } from './ast-types';
 
 import type {
   BlockQuoteNode,
@@ -12,13 +12,14 @@ import type {
   LinkNode,
   ListItemNode,
   ListNode,
+  ListToDoItemNode,
   MarkNode,
   MdastNode,
   ParagraphNode,
   StyleMdxMdastNodeAttribute,
   TextNode,
   TextNodeStyles,
-  ThematicBreakNode,
+  ThematicBreakNode
 } from './ast-types';
 
 const forceLeafNode = (children: Array<TextNode>) => ({
@@ -92,6 +93,13 @@ export default function deserialize(node: MdastNode, options?: Options) {
         children,
       } as ListNode;
     case 'listItem':
+      if ('checked' in node && typeof node.checked === 'boolean') {
+        return {
+          type: NodeTypes.listToDoItem,
+          checked: node.checked,
+          children,
+        } as ListToDoItemNode;
+      }
       return { type: NodeTypes.listItem, children } as ListItemNode;
     case 'paragraph':
       if ('ordered' in node) {

@@ -1,3 +1,4 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import {
   getBlockAbove,
   getEndPoint,
@@ -14,7 +15,6 @@ import {
 } from '@udecode/plate-core';
 import { Point } from 'slate';
 
-import { ELEMENT_TABLE } from './createTablePlugin';
 import { getTableGridAbove } from './queries/getTableGridAbove';
 import { getCellTypes } from './utils/getCellType';
 

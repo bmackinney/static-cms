@@ -1,3 +1,4 @@
+import { ELEMENT_TABLE, ELEMENT_TD, ELEMENT_TH, ELEMENT_TR } from '@udecode/plate';
 import { createPluginFactory } from '@udecode/plate-core';
 
 import { onKeyDownTable } from './onKeyDownTable';
@@ -7,11 +8,6 @@ import { withTable } from './withTable';
 import type { PlateEditor } from '@udecode/plate';
 import type { MdValue } from '../../plateTypes';
 import type { TablePlugin } from './types';
-
-export const ELEMENT_TABLE = 'table';
-export const ELEMENT_TH = 'th';
-export const ELEMENT_TR = 'tr';
-export const ELEMENT_TD = 'td';
 
 /**
  * Enables support for tables.

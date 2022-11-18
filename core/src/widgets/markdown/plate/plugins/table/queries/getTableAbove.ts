@@ -1,6 +1,5 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import { getBlockAbove, getPluginType } from '@udecode/plate-core';
-
-import { ELEMENT_TABLE } from '../createTablePlugin';
 
 import type { GetAboveNodeOptions } from '@udecode/plate';
 import type { PlateEditor } from '@udecode/plate-core';

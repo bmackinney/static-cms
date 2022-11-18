@@ -1,3 +1,4 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import {
   getEndPoint,
   getPluginType,
@@ -6,11 +7,10 @@ import {
   hasNode,
   replaceNodeChildren,
   select,
-  withoutNormalizing,
+  withoutNormalizing
 } from '@udecode/plate-core';
 import { cloneDeep } from 'lodash';
 
-import { ELEMENT_TABLE } from './createTablePlugin';
 import { getTableAbove } from './queries/getTableAbove';
 import { getTableGridAbove } from './queries/getTableGridAbove';
 

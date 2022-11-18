@@ -1,6 +1,6 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import { getPluginType } from '@udecode/plate-core';
 
-import { ELEMENT_TABLE } from '../createTablePlugin';
 import { getEmptyRowNode } from './getEmptyRowNode';
 
 import type { PlateEditor } from '@udecode/plate-core';

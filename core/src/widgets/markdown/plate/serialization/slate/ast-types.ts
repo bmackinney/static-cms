@@ -1,3 +1,24 @@
+import {
+  ELEMENT_BLOCKQUOTE,
+  ELEMENT_CODE_BLOCK,
+  ELEMENT_H1,
+  ELEMENT_H2,
+  ELEMENT_H3,
+  ELEMENT_H4,
+  ELEMENT_H5,
+  ELEMENT_H6,
+  ELEMENT_IMAGE,
+  ELEMENT_LI,
+  ELEMENT_LINK,
+  ELEMENT_OL,
+  ELEMENT_PARAGRAPH,
+  ELEMENT_TABLE,
+  ELEMENT_TD,
+  ELEMENT_TODO_LI,
+  ELEMENT_TR,
+  ELEMENT_UL,
+} from '@udecode/plate';
+
 export const MarkNodeTypes = {
   superscript_mark: 'superscript',
   subscript_mark: 'subscript',
@@ -5,33 +26,31 @@ export const MarkNodeTypes = {
 } as const;
 
 export const NodeTypes = {
-  paragraph: 'p',
-  block_quote: 'blockquote',
-  code_block: 'code_block',
-  code_line: 'code_line',
-  code_syntax: 'code_syntax',
-  link: 'a',
-  ul_list: 'ul',
-  ol_list: 'ol',
-  listItem: 'li',
-  listItemChild: 'lic',
-  table: 'table',
-  tableRow: 'tr',
-  tableCell: 'td',
+  paragraph: ELEMENT_PARAGRAPH,
+  block_quote: ELEMENT_BLOCKQUOTE,
+  code_block: ELEMENT_CODE_BLOCK,
+  link: ELEMENT_LINK,
+  ul_list: ELEMENT_UL,
+  ol_list: ELEMENT_OL,
+  listItem: ELEMENT_LI,
+  listToDoItem: ELEMENT_TODO_LI,
+  table: ELEMENT_TABLE,
+  tableRow: ELEMENT_TR,
+  tableCell: ELEMENT_TD,
   heading: {
-    1: 'h1',
-    2: 'h2',
-    3: 'h3',
-    4: 'h4',
-    5: 'h5',
-    6: 'h6',
+    1: ELEMENT_H1,
+    2: ELEMENT_H2,
+    3: ELEMENT_H3,
+    4: ELEMENT_H4,
+    5: ELEMENT_H5,
+    6: ELEMENT_H6,
   },
   emphasis_mark: 'italic',
   strong_mark: 'bold',
   delete_mark: 'strikethrough',
   inline_code_mark: 'code',
   thematic_break: 'thematic_break',
-  image: 'img',
+  image: ELEMENT_IMAGE,
   ...MarkNodeTypes,
 } as const;
 
@@ -125,11 +144,6 @@ export interface TextNodeStyles {
 
 export type TextNode = { text?: string | undefined } & TextNodeStyles;
 
-export type CodeLineNode = {
-  type: typeof NodeTypes['code_line'];
-  children: Array<TextNode>;
-};
-
 export type CodeBlockNode = {
   type: typeof NodeTypes['code_block'];
   lang: string | undefined;
@@ -149,6 +163,12 @@ export type HeadingNode = {
 
 export type ListNode = {
   type: typeof NodeTypes['ol_list'] | typeof NodeTypes['ul_list'];
+  children: Array<DeserializedNode>;
+};
+
+export type ListToDoItemNode = {
+  type: typeof NodeTypes['listToDoItem'];
+  checked: boolean;
   children: Array<DeserializedNode>;
 };
 

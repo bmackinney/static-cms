@@ -1,3 +1,4 @@
+import { ELEMENT_TABLE, ELEMENT_TD, ELEMENT_TH, ELEMENT_TR } from '@udecode/plate';
 import {
   getAboveNode,
   getPluginType,
@@ -6,8 +7,6 @@ import {
   someNode,
   withoutNormalizing,
 } from '@udecode/plate-core';
-
-import { ELEMENT_TABLE, ELEMENT_TD, ELEMENT_TH, ELEMENT_TR } from '../createTablePlugin';
 
 import type { PlateEditor, TElement } from '@udecode/plate-core';
 import type { MdValue } from '../../../plateTypes';

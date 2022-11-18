@@ -1,4 +1,4 @@
-import { ELEMENT_CODE_BLOCK } from './constants';
+import { ELEMENT_CODE_BLOCK } from '@udecode/plate';
 
 import type { DeserializeHtml } from '@udecode/plate-core';
 

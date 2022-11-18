@@ -5,8 +5,13 @@ import escapeHtml from 'escape-html';
 import { NodeTypes } from './slate/ast-types';
 
 import type { BlockType, LeafType } from 'remark-slate';
+import type {
+  MdCodeBlockElement,
+  MdImageElement,
+  MdLinkElement,
+  MdListItemElement, MdTodoListItemElement
+} from '../plateTypes';
 import type { TableNode } from './slate/ast-types';
-import type { MdCodeBlockElement, MdImageElement, MdLinkElement } from '../plateTypes';
 
 interface FontStyles {
   color?: string;
@@ -38,7 +43,7 @@ const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image',
 
 const BREAK_TAG = '<br />';
 
-const CODE_ELEMENTS = [NodeTypes.code_line, NodeTypes.code_block];
+const CODE_ELEMENTS = [NodeTypes.code_block];
 const LIST_TYPES = [NodeTypes.ul_list, NodeTypes.ol_list];
 
 export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options = {}) {
@@ -239,11 +244,13 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
       return `\n${children}\n`;
 
     case NodeTypes.listItem:
+    case NodeTypes.listToDoItem:
+      const listItemBlock = chunk as MdListItemElement | MdTodoListItemElement;
+
       const isOL = chunk && chunk.parentType === NodeTypes.ol_list;
       const treatAsLeaf =
         (chunk as MdBlockType).children.length >= 1 &&
-        ((chunk as MdBlockType).children.reduce((acc, child) => acc && isLeafNode(child), true) ||
-          (listDepth === 0 && ((chunk as MdBlockType).children[0] as BlockType).type === 'lic'));
+        (chunk as MdBlockType).children.reduce((acc, child) => acc && isLeafNode(child), true);
 
       let spacer = '';
       for (let k = 0; listDepth > k; k++) {
@@ -254,19 +261,19 @@ export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options
           spacer += '  ';
         }
       }
-      return `${spacer}${isOL ? '1.' : '-'} ${children}${treatAsLeaf ? '\n' : ''}`;
+
+      let checkbox = '';
+      if ('checked' in listItemBlock && typeof listItemBlock.checked === 'boolean') {
+        checkbox = ` [${listItemBlock.checked ? 'X' : ' '}]`;
+      }
+
+      return `${spacer}${isOL ? '1.' : '-'}${checkbox} ${children}${treatAsLeaf ? '\n' : ''}`;
 
     case NodeTypes.paragraph:
       return `${children}${!isInTable ? '\n' : ''}`;
 
     case NodeTypes.thematic_break:
       return `---\n`;
-
-    case NodeTypes.listItemChild:
-      return children;
-
-    case NodeTypes.code_line:
-      return `${children}\n`;
 
     case NodeTypes.table:
       const columns = getTableColumnCount(chunk as TableNode);

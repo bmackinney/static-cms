@@ -1,10 +1,10 @@
+import { ELEMENT_CODE_BLOCK } from '@udecode/plate';
 import { createPluginFactory } from '@udecode/plate-core';
 
-import { ELEMENT_CODE_BLOCK } from './constants';
 import { deserializeHtmlCodeBlock } from './deserializeHtmlCodeBlock';
 
+import type { HotkeyPlugin, PlateEditor } from '@udecode/plate-core';
 import type { MdValue } from '../../plateTypes';
-import type { PlateEditor, HotkeyPlugin } from '@udecode/plate-core';
 
 /**
  * Enables support for pre-formatted code blocks.

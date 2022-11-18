@@ -1,6 +1,6 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import { getPluginType } from '@udecode/plate-core';
 
-import { ELEMENT_TABLE } from './createTablePlugin';
 import { getTableGridAbove } from './queries/getTableGridAbove';
 
 import type { PlateEditor, TDescendant, TElement } from '@udecode/plate-core';

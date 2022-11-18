@@ -1,3 +1,4 @@
+import { ELEMENT_TABLE, ELEMENT_TR } from '@udecode/plate';
 import {
   findNode,
   getBlockAbove,
@@ -9,7 +10,6 @@ import {
 } from '@udecode/plate-core';
 import { Path } from 'slate';
 
-import { ELEMENT_TABLE, ELEMENT_TR } from '../createTablePlugin';
 import { getCellTypes, getEmptyRowNode } from '../utils/index';
 
 import type { PlateEditor, TElement } from '@udecode/plate-core';

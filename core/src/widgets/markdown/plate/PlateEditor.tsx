@@ -33,11 +33,11 @@ import {
   ELEMENT_LI,
   ELEMENT_LINK,
   ELEMENT_OL,
-  ELEMENT_PARAGRAPH,
-  ELEMENT_UL,
-  LinkElement,
+  ELEMENT_PARAGRAPH, ELEMENT_TABLE,
+  ELEMENT_TD,
+  ELEMENT_TH, ELEMENT_TODO_LI, ELEMENT_TR, ELEMENT_UL, LinkElement,
   Plate,
-  PlateProvider,
+  PlateProvider
 } from '@udecode/plate';
 import React, { useMemo, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -54,6 +54,7 @@ import { Heading5 } from './components/nodes/headings/Heading5';
 import { Heading6 } from './components/nodes/headings/Heading6';
 import { ImageElement } from './components/nodes/image/ImageElement';
 import ListItemElement from './components/nodes/list/ListItemElement';
+import ListToDoItemElement from './components/nodes/list/ListToDoItemElement';
 import OrderedListElement from './components/nodes/list/OrderedListElement';
 import UnorderedListElement from './components/nodes/list/UnorderedListElement';
 import Paragraph from './components/nodes/paragraph/Paragraph';
@@ -69,13 +70,7 @@ import { exitBreakPlugin } from './plugins/exit-break/exitBreakPlugin';
 import { linkPlugin } from './plugins/link/linkPlugin';
 import { resetBlockTypePlugin } from './plugins/reset-node/resetBlockTypePlugin';
 import { softBreakPlugin } from './plugins/soft-break/softBreakPlugin';
-import {
-  createTablePlugin,
-  ELEMENT_TABLE,
-  ELEMENT_TD,
-  ELEMENT_TH,
-  ELEMENT_TR,
-} from './plugins/table';
+import { createTablePlugin } from './plugins/table';
 import { trailingBlockPlugin } from './plugins/trailing-block/trailingBlockPlugin';
 
 import type { AutoformatPlugin } from '@udecode/plate';
@@ -106,7 +101,7 @@ const components = {
   [ELEMENT_OL]: OrderedListElement,
   [ELEMENT_UL]: UnorderedListElement,
   [ELEMENT_LI]: ListItemElement,
-  ELEMENT_TODO_LI
+  [ELEMENT_TODO_LI]: ListToDoItemElement,
 };
 
 const styles: Record<string, CSSProperties> = {

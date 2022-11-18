@@ -1,6 +1,5 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import { getAboveNode, getPluginType, removeNodes, someNode } from '@udecode/plate-core';
-
-import { ELEMENT_TABLE } from '../createTablePlugin';
 
 import type { PlateEditor } from '@udecode/plate-core';
 import type { MdValue } from '../../../plateTypes';

@@ -1,3 +1,4 @@
+import { ELEMENT_TABLE } from '@udecode/plate';
 import {
   getBlockAbove,
   getPluginType,
@@ -8,7 +9,6 @@ import {
   withoutNormalizing,
 } from '@udecode/plate-core';
 
-import { ELEMENT_TABLE } from '../createTablePlugin';
 import { getEmptyTableNode } from '../utils/getEmptyTableNode';
 
 import type { PlateEditor } from '@udecode/plate-core';
