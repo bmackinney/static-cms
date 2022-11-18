@@ -2,7 +2,7 @@
 // import { BlockType, defaultNodeTypes, LeafType, NodeTypes } from './ast-types';
 import escapeHtml from 'escape-html';
 
-import { NodeTypes } from './slate/ast-types';
+import { LIST_TYPES, NodeTypes } from './slate/ast-types';
 
 import type { BlockType, LeafType } from 'remark-slate';
 import type {
@@ -45,7 +45,6 @@ const VOID_ELEMENTS: Array<keyof typeof NodeTypes> = ['thematic_break', 'image',
 const BREAK_TAG = '<br />';
 
 const CODE_ELEMENTS = [NodeTypes.code_block];
-const LIST_TYPES = [NodeTypes.ul_list, NodeTypes.ol_list];
 
 export default function serialize(chunk: MdBlockType | MdLeafType, opts: Options = {}) {
   const {

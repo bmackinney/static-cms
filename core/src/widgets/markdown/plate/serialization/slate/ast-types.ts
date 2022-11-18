@@ -9,6 +9,7 @@ import {
   ELEMENT_H6,
   ELEMENT_IMAGE,
   ELEMENT_LI,
+  ELEMENT_LIC,
   ELEMENT_LINK,
   ELEMENT_OL,
   ELEMENT_PARAGRAPH,
@@ -34,6 +35,7 @@ export const NodeTypes = {
   ol_list: ELEMENT_OL,
   listItem: ELEMENT_LI,
   listToDoItem: ELEMENT_TODO_LI,
+  listItemChild: ELEMENT_LIC,
   table: ELEMENT_TABLE,
   tableRow: ELEMENT_TR,
   tableCell: ELEMENT_TD,
@@ -177,6 +179,11 @@ export type ListItemNode = {
   children: Array<DeserializedNode>;
 };
 
+export type ListItemChildNode = {
+  type: typeof NodeTypes['listItemChild'];
+  children: Array<DeserializedNode>;
+};
+
 export type ParagraphNode = {
   type: typeof NodeTypes['paragraph'];
   break?: true;
@@ -288,3 +295,5 @@ export type DeserializedNode =
   | ItalicNode
   | TextNode
   | MarkNode;
+
+export const LIST_TYPES: string[] = [NodeTypes.ul_list, NodeTypes.ol_list];

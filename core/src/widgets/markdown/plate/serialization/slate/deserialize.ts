@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { allowedStyles, MarkNodeTypes, NodeTypes } from './ast-types';
+import { allowedStyles, LIST_TYPES, MarkNodeTypes, NodeTypes } from './ast-types';
 
 import type {
   BlockQuoteNode,
@@ -19,7 +19,7 @@ import type {
   StyleMdxMdastNodeAttribute,
   TextNode,
   TextNodeStyles,
-  ThematicBreakNode
+  ThematicBreakNode,
 } from './ast-types';
 
 const forceLeafNode = (children: Array<TextNode>) => ({
@@ -87,31 +87,43 @@ export default function deserialize(node: MdastNode, options?: Options) {
         type: NodeTypes.heading[node.depth || 1],
         children,
       } as HeadingNode;
+
     case 'list':
       return {
         type: node.ordered ? NodeTypes.ol_list : NodeTypes.ul_list,
         children,
       } as ListNode;
+
     case 'listItem':
       if ('checked' in node && typeof node.checked === 'boolean') {
         return {
           type: NodeTypes.listToDoItem,
           checked: node.checked,
-          children,
+          children: children.map(child =>
+            'type' in child && LIST_TYPES.includes(child.type)
+              ? child
+              : {
+                  type: NodeTypes.listItemChild,
+                  children,
+                },
+          ),
         } as ListToDoItemNode;
       }
       return { type: NodeTypes.listItem, children } as ListItemNode;
+
     case 'paragraph':
       if ('ordered' in node) {
         return children;
       }
       return { type: NodeTypes.paragraph, children } as ParagraphNode;
+
     case 'link':
       return {
         type: NodeTypes.link,
         url: node.url,
         children,
       } as LinkNode;
+
     case 'image':
       return {
         type: NodeTypes.image,
@@ -119,8 +131,10 @@ export default function deserialize(node: MdastNode, options?: Options) {
         url: node.url,
         caption: [{ text: node.alt ?? '' }],
       } as ImageNode;
+
     case 'blockquote':
       return { type: NodeTypes.block_quote, children } as BlockQuoteNode;
+
     case 'code':
       return {
         type: NodeTypes.code_block,
